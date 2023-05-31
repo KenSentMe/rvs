@@ -1,0 +1,9 @@
+from django.urls import path
+
+from . import views
+
+app_name = "uitspraken"
+urlpatterns = [
+    path("", views.IndexView.as_view(), name="index"),
+    path("<int:pk>/", views.UitspraakView.as_view(), name="uitspraak"),
+]

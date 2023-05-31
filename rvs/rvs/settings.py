@@ -37,7 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'admin_interface',
+    'colorfield',
     'uitspraken',
+    'jet_django',
+    'bootstrap4',
+    'rvs',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +127,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+JET_PROJECT = 'rvs_2'
+JET_TOKEN = '7c35df1a-a631-478d-8835-a8ff69d5423f'
+
+LOGIN_URL = '/login/'

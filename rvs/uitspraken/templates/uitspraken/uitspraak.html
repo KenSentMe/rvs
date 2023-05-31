@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>{{ uitspraak.titel }}</h1>
+<p>{{ uitspraak.samenvatting }}</p>
+<ul>
+    {% for trefwoord in uitspraak.trefwoorden.all %}
+    <li>{{ trefwoord.naam }} - {{ trefwoord.type }}</li>
+    {% endfor %}
+</ul>
+<p>{{ uitspraak.ecli }}</p>
+<p>{{ uitspraak.link }}</p>
+<p>{{ uitspraak.datum }}</p>
+<p>{{ uitspraak.inhoud|linebreaksbr }}</p>
+
+{% endblock %}

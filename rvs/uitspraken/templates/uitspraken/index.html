@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if uitspraken %}
+    <form method="GET" action="{% url 'uitspraken:index' %}">
+        <div class="form-group">
+            <label for="trefwoord">Filter by Trefwoord:</label>
+            <select multiple class="form-control" id="trefwoord" name="trefwoord">
+                {% for trefwoord in all_trefwoorden %}
+                    <option value="{{ trefwoord.id }}" {% if trefwoord.id in selected_trefwoorden %}selected{% endif %}>{{ trefwoord.naam }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a href="{% url 'uitspraken:index' %}" class="btn btn-secondary">Clear Filter</a>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Datum</th>
+                <th>Samenvatting</th>
+                <th>Trefwoord</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for uitspraak in uitspraken %}
+            <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}">
+                <td>{{ uitspraak.titel }}</td>
+                <td>{{ uitspraak.datum }}</td>
+                <td>{{ uitspraak.samenvatting }}</td>
+                <td>
+                {% for trefwoord in uitspraak.trefwoorden.all %}
+                    {{ trefwoord.naam }} ({{ trefwoord.type }})
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Geen uitspraken beschikbaar</p>
+{% endif %}
+
+    <nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+   var tableRows = document.getElementsByClassName("table-row");
+   Array.from(tableRows).forEach(function(row) {
+       row.addEventListener("mouseover", function() {
+           this.style.backgroundColor = "#f7f7f7";
+       });
+       row.addEventListener("mouseout", function() {
+           this.style.backgroundColor = "";
+       });
+       row.addEventListener("click", function() {
+           var url = this.dataset.href;
+           if (url) {
+               window.location.href = url;
+           }
+       });
+   });
+});
+</script>
+{% endblock %}

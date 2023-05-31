@@ -1,0 +1,37 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.addEventListener('DOMContentLoaded', function() {
+            const nextPrevLinks = JSON.parse('{{ next_prev_links|escapejs }}');
+            const currentUrl = window.location.href;
+
+            function openPopup(url) {
+                window.open(url, '_blank', 'height=600,width=800');
+            }
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.disabled = !nextPrevLinks.next_url;
+            nextButton.addEventListener('click', function() {
+                openPopup(nextPrevLinks.next_url);
+            });
+
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.disabled = !nextPrevLinks.prev_url;
+            prevButton.addEventListener('click', function() {
+                openPopup(nextPrevLinks.prev_url);
+            });
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.marginTop = '10px';
+            buttonContainer.appendChild(prevButton);
+            buttonContainer.appendChild(nextButton);
+
+            const submitRow = document.querySelector('.submit-row');
+            submitRow.insertAdjacentElement('beforebegin', buttonContainer);
+        });
+    </script>
+{% endblock %}
