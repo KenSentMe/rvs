@@ -41,6 +41,7 @@ class UitspraakView(generic.DetailView):
     template_name = "uitspraken/uitspraak.html"
 
 
+@login_required()
 def scraper_view(request):
     if request.method == "POST":
         url = request.POST.get('url')
