@@ -2,16 +2,42 @@
 
 {% block content %}
 
+<div class="navigation-button fixed">
+{% if previous_uitspraak %}
+  <a class="btn btn-primary" href="/uitspraken/{{ previous_uitspraak.id }}">Previous</a>
+{% endif %}
+{% if next_uitspraak %}
+  <a class="btn btn-primary" href="/uitspraken/{{ next_uitspraak.id }}">Next</a>
+{% endif %}
+</div>
+
 <h1>{{ uitspraak.titel }}</h1>
 <p>{{ uitspraak.samenvatting }}</p>
-<ul>
-    {% for trefwoord in uitspraak.trefwoorden.all %}
-    <li>{{ trefwoord.naam }} - {{ trefwoord.type }}</li>
-    {% endfor %}
-</ul>
+    <div class="label-list">
+      {% for trefwoord in uitspraak.trefwoorden.all %}
+        <span class="badge badge-primary">{{ trefwoord.naam }} - {{ trefwoord.type }}</span>
+      {% endfor %}
+    </div>
 <p>{{ uitspraak.ecli }}</p>
-<p>{{ uitspraak.link }}</p>
+<p><a href="{{ uitspraak.link }}" target="_blank">Bekijk uitspraak op Raadvanstate.nl</a></p>
 <p>{{ uitspraak.datum }}</p>
 <p>{{ uitspraak.inhoud|linebreaksbr }}</p>
 
+<div class="navigation-button fixed">
+{% if previous_uitspraak %}
+  <a class="btn btn-primary" href="/uitspraken/{{ previous_uitspraak.id }}">Previous</a>
+{% endif %}
+{% if next_uitspraak %}
+  <a class="btn btn-primary" href="/uitspraken/{{ next_uitspraak.id }}">Next</a>
+{% endif %}
+</div>
+
 {% endblock %}
+
+<style>
+    .label-list span {
+      display: inline-block;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+</style>

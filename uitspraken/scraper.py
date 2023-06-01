@@ -71,6 +71,8 @@ def scrape_and_populate_database(rows, years, facet):
         for element in soup.select("div.rol-entry"):
             link = element.select_one("div.grid-title a.siteLink")["href"]
             titel = element.select_one("div.grid-title a.siteLink").get_text(strip=True)
+            if len(titel) > 90:
+                titel = titel[:90]
             print("Found entry " + titel)
 
             if not entry_already_exists(titel):

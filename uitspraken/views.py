@@ -4,6 +4,7 @@ from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import render
+from django.urls import reverse
 
 from .models import Uitspraak, Trefwoord
 from .scraper import scrape_and_populate_database
@@ -39,6 +40,28 @@ class IndexView(generic.ListView):
 class UitspraakView(generic.DetailView):
     model = Uitspraak
     template_name = "uitspraken/uitspraak.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        trefwoorden = self.request.GET.getlist('trefwoord')
+
+        if trefwoorden:
+            print("Trefwoorden found")
+            queryset = queryset.filter(trefwoorden__in=trefwoorden)
+
+        return queryset.order_by('id')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        uitspraak = context['uitspraak']
+        queryset = self.get_queryset()
+        previous_uitspraak = queryset.filter(id__lt=uitspraak.id).last()
+        next_uitspraak = queryset.filter(id__gt=uitspraak.id).first()
+        context['previous_uitspraak'] = previous_uitspraak
+        context['next_uitspraak'] = next_uitspraak
+        return context
+
 
 
 @login_required()
