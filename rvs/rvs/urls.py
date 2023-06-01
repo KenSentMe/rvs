@@ -20,7 +20,6 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('jet_api/', include('jet_django.urls')),
     path("uitspraken/", include('uitspraken.urls')),
     path("login/", views.login_view, name="login")
 ]

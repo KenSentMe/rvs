@@ -3,8 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
 from django.db.models import Count
+from django.shortcuts import render
 
 from .models import Uitspraak, Trefwoord
+from .scraper import scrape_and_populate_database
 
 
 @method_decorator(login_required, name='dispatch')
@@ -37,3 +39,14 @@ class IndexView(generic.ListView):
 class UitspraakView(generic.DetailView):
     model = Uitspraak
     template_name = "uitspraken/uitspraak.html"
+
+
+def scraper_view(request):
+    if request.method == "POST":
+        url = request.POST.get('url')
+        output = scrape_and_populate_database(url)
+        context = {'output': output}
+        return render(request, 'uitspraken/scraper.html', context)
+    else:
+        return render(request, 'uitspraken/scraper.html')
+
