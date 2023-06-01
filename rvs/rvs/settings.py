@@ -106,7 +106,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wsgi.py.application'
+WSGI_APPLICATION = 'rvs.wsgi.application'
 
 
 # Database
