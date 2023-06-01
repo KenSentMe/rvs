@@ -56,11 +56,11 @@ def scrape_and_populate_database(rows, years, facet):
         'Connection': 'keep-alive',
     }
 
-    statements = []
-
     for year in years:
 
-        url = f"https://www.raadvanstate.nl/uitspraken/?zoeken=true&zoeken_term=&pager_rows={rows}actualiteit=kalenderjaar&kalenderjaar={year}&Zoe_Selected_facet%3ARechtsgebied={facet}"
+        url = f"https://www.raadvanstate.nl/uitspraken/?zoeken=true&zoeken_term=&pager_rows={rows}&actualiteit=kalenderjaar&kalenderjaar={year}&Zoe_Selected_facet%3ARechtsgebied={facet}"
+
+        print("Scraping url " + url)
 
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.content, "html.parser")
@@ -102,9 +102,6 @@ def scrape_and_populate_database(rows, years, facet):
                 uitspraak.trefwoorden.set(trefwoorden_data)
 
                 uitspraak.save()
-                statements.append("New entry: " + titel)
             else:
                 print("Duplicate found: " + titel)
-                statements.append("Duplicate found: " + titel)
 
-    return statements
