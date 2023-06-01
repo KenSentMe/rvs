@@ -13,7 +13,7 @@ class Trefwoord(models.Model):
 
 
 class Uitspraak(models.Model):
-    titel = models.CharField(max_length=24)
+    titel = models.CharField(max_length=100)
     ecli = models.CharField(max_length=24)
     samenvatting = models.TextField()
     datum = models.DateField()
