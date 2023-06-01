@@ -44,8 +44,11 @@ class UitspraakView(generic.DetailView):
 @login_required()
 def scraper_view(request):
     if request.method == "POST":
-        url = request.POST.get('url')
-        output = scrape_and_populate_database(url)
+        rows = int(request.POST.get('rows'))
+        start_year = int(request.POST.get('start_year'))
+        end_year = int(request.POST.get('end_year'))
+        facet = int(request.POST.get('facet'))
+        output = scrape_and_populate_database(rows, list(range(start_year, end_year + 1)), facet)
         context = {'output': output}
         return render(request, 'uitspraken/scraper.html', context)
     else:

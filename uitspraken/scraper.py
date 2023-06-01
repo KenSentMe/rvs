@@ -44,7 +44,7 @@ def get_full_data(url, headers):
     return ecli, datum_parsed, samenvatting, trefwoorden, inhoud
 
 
-def scrape_and_populate_database(url):
+def scrape_and_populate_database(rows, years, facet):
     headers = {
         'Accept-Encoding': 'gzip, deflate, sdch',
         'Accept-Language': 'en-US,en;q=0.8',
@@ -55,51 +55,56 @@ def scrape_and_populate_database(url):
         'Cache-Control': 'max-age=0',
         'Connection': 'keep-alive',
     }
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.content, "html.parser")
-
-    # Extract the data using BeautifulSoup and populate the database
-    # Use the Uitspraak model to create instances and save them to the database
 
     statements = []
 
-    for element in soup.select("div.rol-entry"):
-        link = element.select_one("div.grid-title a.siteLink")["href"]
-        titel = element.select_one("div.grid-title a.siteLink").get_text(strip=True)
-        print("Found entry " + titel)
+    for year in years:
 
-        if not entry_already_exists(titel):
+        url = f"https://www.raadvanstate.nl/uitspraken/?zoeken=true&zoeken_term=&pager_rows={rows}actualiteit=kalenderjaar&kalenderjaar={year}&Zoe_Selected_facet%3ARechtsgebied={facet}"
 
-            print(titel + " not scraped yet. Start scraping")
+        response = requests.get(url, headers=headers)
+        soup = BeautifulSoup(response.content, "html.parser")
 
-            ecli, datum, samenvatting, trefwoorden, inhoud = get_full_data(link, headers)
+        # Extract the data using BeautifulSoup and populate the database
+        # Use the Uitspraak model to create instances and save them to the database
 
-            trefwoorden_data = []
+        for element in soup.select("div.rol-entry"):
+            link = element.select_one("div.grid-title a.siteLink")["href"]
+            titel = element.select_one("div.grid-title a.siteLink").get_text(strip=True)
+            print("Found entry " + titel)
 
-            for trefwoord in trefwoorden:
-                trefwoord_data, _ = Trefwoord.objects.get_or_create(
-                    naam=trefwoord[1],
-                    type=trefwoord[0]
+            if not entry_already_exists(titel):
+
+                print(titel + " not scraped yet. Start scraping")
+
+                ecli, datum, samenvatting, trefwoorden, inhoud = get_full_data(link, headers)
+
+                trefwoorden_data = []
+
+                for trefwoord in trefwoorden:
+                    trefwoord_data, _ = Trefwoord.objects.get_or_create(
+                        naam=trefwoord[1],
+                        type=trefwoord[0]
+                    )
+                    trefwoorden_data.append(trefwoord_data)
+
+                uitspraak = Uitspraak(
+                    titel=titel,
+                    ecli=ecli,
+                    samenvatting=samenvatting,
+                    datum=datum,
+                    link=link,
+                    inhoud=inhoud,
                 )
-                trefwoorden_data.append(trefwoord_data)
 
-            uitspraak = Uitspraak(
-                titel=titel,
-                ecli=ecli,
-                samenvatting=samenvatting,
-                datum=datum,
-                link=link,
-                inhoud=inhoud,
-            )
+                uitspraak.save()
 
-            uitspraak.save()
+                uitspraak.trefwoorden.set(trefwoorden_data)
 
-            uitspraak.trefwoorden.set(trefwoorden_data)
-
-            uitspraak.save()
-            statements.append("New entry: " + titel)
-        else:
-            print("Duplicate found: " + titel)
-            statements.append("Duplicate found: " + titel)
+                uitspraak.save()
+                statements.append("New entry: " + titel)
+            else:
+                print("Duplicate found: " + titel)
+                statements.append("Duplicate found: " + titel)
 
     return statements
