@@ -1,1 +1,1 @@
-web: gunicorn rvs.rvs.wsgi
+web: gunicorn rvs.wsgi
