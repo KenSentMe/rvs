@@ -77,7 +77,11 @@ def scrape_and_populate_database(rows, years, facet):
 
                 print(titel + " not scraped yet. Start scraping")
 
-                ecli, datum, samenvatting, trefwoorden, inhoud = get_full_data(link, headers)
+                try:
+                    ecli, datum, samenvatting, trefwoorden, inhoud = get_full_data(link, headers)
+                except: # noqa
+                    print("Skipping " + titel)
+                    continue
 
                 trefwoorden_data = []
 
