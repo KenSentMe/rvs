@@ -15,7 +15,11 @@
 <p>{{ uitspraak.samenvatting }}</p>
     <div class="label-list">
       {% for trefwoord in uitspraak.trefwoorden.all %}
-        <span class="badge badge-primary">{{ trefwoord.naam }} - {{ trefwoord.type }}</span>
+            {% if trefwoord.type == "proceduresoort" %}
+                <span class="badge badge-primary">{{ trefwoord.naam }} ({{ trefwoord.type }})</span>
+            {% elif trefwoord.type == "rechtsgebied" %}
+                <span class="badge badge-info">{{ trefwoord.naam }} ({{ trefwoord.type }})</span>
+            {% endif %}
       {% endfor %}
     </div>
 <p>{{ uitspraak.ecli }}</p>

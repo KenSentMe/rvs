@@ -4,7 +4,6 @@ from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import render
-from django.urls import reverse
 
 from .models import Uitspraak, Trefwoord
 from .scraper import scrape_and_populate_database
@@ -14,11 +13,11 @@ from .scraper import scrape_and_populate_database
 class IndexView(generic.ListView):
     template_name = "uitspraken/index.html"
     context_object_name = "uitspraken"
-    paginate_by = 10
+    paginate_by = 25
 
     def get_queryset(self):
         queryset = Uitspraak.objects.all().order_by("id")
-        trefwoorden = self.request.GET.getlist('trefwoord')
+        trefwoorden = self.request.GET.getlist('proceduresoort') + self.request.GET.getlist('rechtsgebied')
         if trefwoorden:
             queryset = queryset.filter(trefwoorden__id__in=trefwoorden).distinct().annotate(
                 num_trefwoorden=Count('trefwoorden')).filter(num_trefwoorden=len(trefwoorden))
@@ -32,7 +31,11 @@ class IndexView(generic.ListView):
         page_obj = paginator.get_page(page_number)
         context['page_obj'] = page_obj
         context['all_trefwoorden'] = Trefwoord.objects.all()
-        context['selected_trefwoorden'] = self.request.GET.getlist('trefwoord')
+        context['proceduresoort_trefwoorden'] = Trefwoord.objects.filter(type="proceduresoort")
+        context['rechtsgebied_trefwoorden'] = Trefwoord.objects.filter(type="rechtsgebied")
+        context['selected_proceduresoort'] = self.request.GET.getlist('proceduresoort')
+        context['selected_rechtsgebied'] = self.request.GET.getlist('rechtsgebied')
+
         return context
 
 

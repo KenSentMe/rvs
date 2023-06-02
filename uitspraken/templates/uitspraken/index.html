@@ -2,98 +2,124 @@
 
 {% block content %}
 
-{% if uitspraken %}
-    <form method="GET" action="{% url 'uitspraken:index' %}">
-        <div class="form-group">
-            <label for="trefwoord">Filter by Trefwoord:</label>
-            <select multiple class="form-control" id="trefwoord" name="trefwoord">
-                {% for trefwoord in all_trefwoorden %}
-                    <option value="{{ trefwoord.id }}" {% if trefwoord.id in selected_trefwoorden %}selected{% endif %}>{{ trefwoord.naam }}</option>
+<div class="row">
+    <div class="col-md-9">
+        {% if uitspraken %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-3">Uitspraak</th>
+                    <th class="col">Samenvatting</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for uitspraak in uitspraken %}
+                <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}">
+                    <td>
+                        <p>{{ uitspraak.titel }}</p>
+                        <p>{{ uitspraak.datum }}</p>
+                        <p>
+                            {% for trefwoord in uitspraak.trefwoorden.all %}
+                                {% if trefwoord.type == "proceduresoort" %}
+                                    <span class="badge badge-primary">{{ trefwoord.naam }}</span>
+                                {% elif trefwoord.type == "rechtsgebied" %}
+                                    <span class="badge badge-info">{{ trefwoord.naam }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                    </td>
+                    <td>{{ uitspraak.samenvatting }}</td>
+                </tr>
                 {% endfor %}
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Filter</button>
-        <a href="{% url 'uitspraken:index' %}" class="btn btn-secondary">Clear Filter</a>
-    </form>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Titel</th>
-                <th>Datum</th>
-                <th>Samenvatting</th>
-                <th>Trefwoord</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for uitspraak in uitspraken %}
-            <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}">
-                <td>{{ uitspraak.titel }}</td>
-                <td>{{ uitspraak.datum }}</td>
-                <td>{{ uitspraak.samenvatting }}</td>
-                <td>
-                {% for trefwoord in uitspraak.trefwoorden.all %}
-                    {{ trefwoord.naam }} ({{ trefwoord.type }})
-                    {% if not forloop.last %}, {% endif %}
-                {% endfor %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <p>Geen uitspraken beschikbaar</p>
-{% endif %}
-{% if is_paginated %}
-  <div class="pagination-summary">
-    Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} results
-  </div>
-  <nav aria-label="Page navigation">
-    <ul class="pagination">
-      {% if page_obj.has_previous %}
-        <li class="page-item">
-          <a class="page-link" href="?page=1" aria-label="First">
-            <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">First</span>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-            <span aria-hidden="true">&lsaquo;</span>
-            <span class="sr-only">Previous</span>
-          </a>
-        </li>
-      {% endif %}
-
-      {% for i in page_obj.paginator.page_range %}
-        {% if i == page_obj.number %}
-          <li class="page-item active">
-            <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
-          </li>
-        {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-          </li>
+            </tbody>
+        </table>
+        {% else %}
+            <p>Geen uitspraken beschikbaar</p>
         {% endif %}
-      {% endfor %}
+        {% if is_paginated %}
+          <div class="pagination-summary">
+            Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} results
+          </div>
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page=1" aria-label="First">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">First</span>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>
+              {% endif %}
 
-      {% if page_obj.has_next %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-            <span aria-hidden="true">&rsaquo;</span>
-            <span class="sr-only">Next</span>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
-            <span aria-hidden="true">&raquo;</span>
-            <span class="sr-only">Last</span>
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </nav>
-{% endif %}
+              {% for i in page_obj.paginator.page_range %}
+                {% if i == page_obj.number %}
+                  <li class="page-item active">
+                    <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+                  </li>
+                {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Last</span>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Filter Uitspraken</h5>
+                <form method="GET" action="{% url 'uitspraken:index' %}">
+                    <div class="form-group">
+                        <label>Filter by Proceduresoort:</label><br>
+                        {% for trefwoord in proceduresoort_trefwoorden %}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="proceduresoort-{{ trefwoord.id }}" name="proceduresoort" value="{{ trefwoord.id }}" {% if trefwoord.id in selected_proceduresoort %}checked{% endif %}>
+                                <label class="form-check-label" for="proceduresoort-{{ trefwoord.id }}">{{ trefwoord.naam }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Filter by Rechtsgebied:</label><br>
+                        {% for trefwoord in rechtsgebied_trefwoorden %}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="rechtsgebied-{{ trefwoord.id }}" name="rechtsgebied" value="{{ trefwoord.id }}" {% if trefwoord.id in selected_rechtsgebied %}checked{% endif %}>
+                                <label class="form-check-label" for="rechtsgebied-{{ trefwoord.id }}">{{ trefwoord.naam }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a href="{% url 'uitspraken:index' %}" class="btn btn-secondary">Clear Filter</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 {% endblock %}
 
