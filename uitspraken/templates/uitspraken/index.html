@@ -26,7 +26,12 @@
                                     <span class="badge badge-info">{{ trefwoord.naam }}</span>
                                 {% endif %}
                             {% endfor %}
+                            <span class="badge badge-success">{{ uitspraak.plaats }}</span>
+                            <span class="badge badge-warning">{{ uitspraak.provincie }}</span>
                         </p>
+                        <h3>
+                            <span class="badge badge-dark">{{ uitspraak.get_label_display }}</span>
+                        </h3>
                     </td>
                     <td>{{ uitspraak.samenvatting }}</td>
                 </tr>

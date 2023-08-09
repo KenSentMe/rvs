@@ -1,5 +1,6 @@
 import openai
 import traceback
+import json
 
 import rvs.openai.key as key
 
@@ -10,7 +11,7 @@ def send_prompt(prompt):
 
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[{"role": "user", "content": prompt}],
             temperature=0,
             max_tokens=100,
@@ -25,7 +26,7 @@ def send_prompt(prompt):
         print(prompt)
         print(e)
         traceback.print_exc()
-        return 1
+        return None
 
 
 def get_place(text):
@@ -35,22 +36,40 @@ def get_place(text):
                 "{text}"
                 
                 Als antwoord wil ik de plaats en de provincie waarin de plaats ligt in de vorm van 
-                een Python list.
+                een Python list. Als je geen antwoord hebt, geef dan als antwoord ["onbekend", "onbekend"] op.
                 Antwoord:
                 """
     answer = send_prompt(prompt)
-    return answer
+    if answer:
+        return json.loads(answer)
+
+    return None
 
 
 def get_winner(text):
 
-    prompt = f"""Wie krijgt van de Raad van State gelijk in deze zaak:
+    prompt = f"""Lees deze uitspraak van de Raad van State:
 
             "{text}"
             
-            Ik wil dat je een persoon of organisatie aanwijst als winnaar.
-            Winnaar:
+            Welke van de volgende opties geldt voor deze uitspraak? Kies 1 antwoord.
+            
+            1. het beroep wordt gegrond verklaard. Het bestreden besluit wordt geheel of gedeeltelijk vernietigd
+            2. het beroep wordt niet-ontvankelijk verklaard.
+            3. De bestuursrechter kan bepalen dat:
+                a. de rechtsgevolgen van het vernietigde besluit of het vernietigde gedeelte daarvan geheel of gedeeltelijk in stand blijven, of
+                b. zijn uitspraak in de plaats treedt van het vernietigde besluit of het vernietigde gedeelte daarvan.
+            4. De bestuursrechter kan het bestuursorgaan opdragen een nieuw besluit te nemen of een andere handeling te verrichten met inachtneming van zijn aanwijzingen.
+            5. De bestuursrechter kan zo nodig een voorlopige voorziening treffen. Daarbij bepaalt hij het tijdstip waarop de voorlopige voorziening vervalt.
+            6. De bestuursrechter kan bepalen dat, indien of zolang het bestuursorgaan niet voldoet aan een uitspraak, het bestuursorgaan aan een door hem aangewezen partij een in de uitspraak vast te stellen dwangsom verbeurt.
+            7. De bestuursrechter verklaart zich onbevoegd om uitspraak te doen.
+            8. Anders
+            
+            Antwoord uitsluitend in een Python list met de volgende opzet: [<cijfer antwoord>, <text antwoord>] 
             """
 
     answer = send_prompt(prompt)
-    return answer
+    if answer:
+        return json.loads(answer)
+
+    return None
