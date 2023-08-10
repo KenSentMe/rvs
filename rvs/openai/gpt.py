@@ -73,3 +73,47 @@ def get_winner(text):
         return json.loads(answer)
 
     return None
+
+
+def get_parties(text):
+
+    prompt = f"""Lees deze uitspraak van de Raad van State:
+
+            "{text}"
+            
+            Beantwoord 2 vragen:
+            
+            1: Wie is de appelant of wie zijn de appelanten, geef een omschrijving?
+            2: Tegen welke tegenpartij hebben zij een geding?
+            
+            Antwoord uitsluitend in een Python list met de volgende opzet: ["<omschrijving appelant(en)>", "<tegenpartij>"]
+            """
+    answer = send_prompt(prompt)
+    if answer:
+        return json.loads(answer)
+
+    return None
+
+
+def get_metadata(text):
+
+    prompt = f"""Lees deze uitspraak van de Raad van State:
+
+                "{text}"
+
+                Beantwoord 2 vragen:
+
+                1: Wie is de appelant of wie zijn de appelanten, geef een omschrijving?
+                2: Tegen welke tegenpartij hebben zij een geding?
+                3: Over welke plaats en provincie gaat deze tekst?
+
+                Antwoord uitsluitend in een Python list met de volgende opzet: 
+                ["<omschrijving appelant(en)>", "<tegenpartij>", "<plaats>", "<provincie>"]
+                
+                Als het antwoord onbekend is, geef dan "onbekend" op bij het betreffende deel van de Python list.
+                """
+    answer = send_prompt(prompt)
+    if answer:
+        return json.loads(answer)
+
+    return None

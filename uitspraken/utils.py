@@ -1,4 +1,4 @@
-from rvs.openai.gpt import get_winner, get_place
+from rvs.openai.gpt import get_winner, get_place, get_metadata
 
 
 def add_oordeel(uitspraak):
@@ -24,3 +24,15 @@ def add_place(uitspraak):
         uitspraak.provincie = place[1]
         uitspraak.save()
 
+
+def add_metadata(uitspraak):
+    if uitspraak.inhoud:
+        metadata = get_metadata(uitspraak.inhoud[:1000])
+        if len(metadata) == 4:
+            uitspraak.appellant = metadata[0]
+            uitspraak.counterpart = metadata[1]
+            uitspraak.place = metadata[2]
+            uitspraak.provincie = metadata[3]
+            uitspraak.save()
+    else:
+        return

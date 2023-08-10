@@ -32,6 +32,8 @@ class Uitspraak(models.Model):
     plaats = models.CharField(max_length=100, default="")
     provincie = models.CharField(max_length=100, default="")
     label = models.CharField(max_length=3, choices=label_choices, default="NEW")
+    appellant = models.CharField(max_length=250, default="")
+    counterpart = models.CharField(max_length=250, default="")
 
     class Meta:
         verbose_name_plural = "Uitspraken"
