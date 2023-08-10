@@ -129,10 +129,20 @@ if IS_HEROKU_APP:
 else:
     # When running locally in development or in CI, a sqlite database file will be used instead
     # to simplify initial setup. Longer term it's recommended to use Postgres locally too.
+    # DATABASES = {
+    #     "default": {
+    #         "ENGINE": "django.db.backends.sqlite3",
+    #         "NAME": BASE_DIR / "db.sqlite3",
+    #     }
+    # }
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'd5q5j68onpjmo3',
+            'USER': 'yozhzewmusgvuj',
+            'PASSWORD': '658dc3ad60d4aad9d3854b8a52ea41f1dfe274d538ee8d751c82dd8b1a355163',
+            'HOST': 'ec2-52-45-200-167.compute-1.amazonaws.com',
+            'PORT': '5432',
         }
     }
 

@@ -10,8 +10,20 @@
   <a class="btn btn-primary" href="/uitspraken/{{ next_uitspraak.id }}">Next</a>
 {% endif %}
 </div>
-
-<h1>{{ uitspraak.titel }}</h1>
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="d-inline">{{ uitspraak.titel }}</h1>
+    </div>
+    <div class="col-md-6 text-right">
+        <div class="dropdown">
+            <select id="label-dropdown" class="btn btn-primary">
+                {% for value, label in uitspraak.label_choices %}
+                    <option value="{{ value }}" {% if value == uitspraak.label %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
 <div class="alert alert-info">
     <strong>Oordeel:</strong> {{ uitspraak.oordeel }}
     <br>
@@ -63,6 +75,29 @@
   <a class="btn btn-primary" href="/uitspraken/{{ next_uitspraak.id }}">Next</a>
 {% endif %}
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#label-dropdown').on('change', function () {
+            var newLabel = $(this).val();
+            var instanceId = {{ uitspraak.id }};
+
+            $.ajax({
+                type: 'POST',
+                url: '/uitspraken/update-label/' + instanceId + '/',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    label: newLabel,
+                },
+                success: function () {
+                    // Update the view without refreshing the page
+                    $('#label-dropdown option:selected').prop('selected', false);
+                    $('#label-dropdown option[value="' + newLabel + '"]').prop('selected', true);
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock %}
 
