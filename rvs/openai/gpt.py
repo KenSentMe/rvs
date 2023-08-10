@@ -1,10 +1,13 @@
 import openai
 import traceback
 import json
+import os
 
-import rvs.openai.key as key
-
-openai.api_key = key.openai_key
+if os.environ.get("OPENAI_KEY"):
+    openai.api_key = os.environ.get("OPENAI_KEY")
+else:
+    import rvs.openai.key as key
+    openai.api_key = key.openai_key
 
 
 def send_prompt(prompt):
