@@ -3,9 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
 from django.db.models import Count
-from django.shortcuts import render
+
+
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Uitspraak, Trefwoord
+from .forms import LabelForm
 from .scraper import scrape_and_populate_database
 
 
@@ -66,7 +69,6 @@ class UitspraakView(generic.DetailView):
         return context
 
 
-
 @login_required()
 def scraper_view(request):
     if request.method == "POST":
@@ -79,4 +81,18 @@ def scraper_view(request):
         return render(request, 'uitspraken/scraper.html', context)
     else:
         return render(request, 'uitspraken/scraper.html')
+
+
+def update_label(request, pk):
+    instance = get_object_or_404(Uitspraak, pk=pk)
+
+    if request.method == 'POST':
+        form = LabelForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+    else:
+        form = LabelForm(instance=instance)
+
+    context = {'form': form}
+    return render(request, 'uitspraken/uitspraak.html', context)
 

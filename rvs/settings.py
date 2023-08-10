@@ -45,8 +45,6 @@ IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
 if not IS_HEROKU_APP:
     DEBUG = True
 
-DEBUG = True
-
 # On Heroku, it's safe to use a wildcard for `ALLOWED_HOSTS``, since the Heroku router performs
 # validation of the Host header in the incoming HTTP request. On other platforms you may need
 # to list the expected hostnames explicitly to prevent HTTP Host header attacks. See:
@@ -137,6 +135,16 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'NAME': 'd5q5j68onpjmo3',
+    #         'USER': 'yozhzewmusgvuj',
+    #         'PASSWORD': '658dc3ad60d4aad9d3854b8a52ea41f1dfe274d538ee8d751c82dd8b1a355163',
+    #         'HOST': 'ec2-52-45-200-167.compute-1.amazonaws.com',
+    #         'PORT': '5432',
+    #     }
+    # }
 
 
 # Password validation
