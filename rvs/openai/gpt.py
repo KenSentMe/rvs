@@ -105,7 +105,8 @@ def get_metadata(text):
 
                 1: Wie is de appelant of wie zijn de appelanten, geef een omschrijving?
                 2: Tegen welke tegenpartij hebben zij een geding?
-                3: Over welke plaats en provincie gaat deze tekst?
+                3: Over welke plaats gaat deze tekst?
+                4: Over welke provincie gaat deze tekst?
 
                 Antwoord uitsluitend in een Python list met de volgende opzet: 
                 ["<omschrijving appelant(en)>", "<tegenpartij>", "<plaats>", "<provincie>"]
@@ -114,6 +115,7 @@ def get_metadata(text):
                 """
     answer = send_prompt(prompt)
     if answer:
-        return json.loads(answer)
-
-    return None
+        try:
+            return json.loads(answer)
+        except ValueError:
+            return None

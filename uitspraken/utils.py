@@ -4,7 +4,10 @@ from rvs.openai.gpt import get_winner, get_place, get_metadata
 def add_oordeel(uitspraak):
     if uitspraak.oordeel != 0:
         return
-    index = uitspraak.inhoud.lower().find("\nbeslissing\n")
+    if "\nconclusie\n" in uitspraak.inhoud.lower():
+        index = uitspraak.inhoud.lower().find("\nconclusie\n")
+    else:
+        index = uitspraak.inhoud.lower().find("\nbeslissing\n")
     if index != -1:
         response = get_winner(uitspraak.inhoud[index:])
     else:
@@ -26,12 +29,12 @@ def add_place(uitspraak):
 
 
 def add_metadata(uitspraak):
-    if uitspraak.inhoud:
+    if uitspraak.inhoud and not uitspraak.appellant:
         metadata = get_metadata(uitspraak.inhoud[:1000])
         if len(metadata) == 4:
             uitspraak.appellant = metadata[0]
             uitspraak.counterpart = metadata[1]
-            uitspraak.place = metadata[2]
+            uitspraak.plaats = metadata[2]
             uitspraak.provincie = metadata[3]
             uitspraak.save()
     else:
