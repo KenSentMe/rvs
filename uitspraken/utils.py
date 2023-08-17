@@ -9,9 +9,14 @@ def add_oordeel(uitspraak):
     else:
         index = uitspraak.inhoud.lower().find("\nbeslissing\n")
     if index != -1:
-        response = get_winner(uitspraak.inhoud[index:])
+        beslissing = uitspraak.inhoud[index:]
     else:
-        response = get_winner(uitspraak.inhoud)
+        beslissing = uitspraak.inhoud
+
+    beslissing_kort = beslissing.lower().split("\nbijlage")[0]
+
+    response = get_winner(beslissing_kort[:10000])
+
     if response:
         uitspraak.oordeel = response[0]
         uitspraak.uitleg = response[1]
