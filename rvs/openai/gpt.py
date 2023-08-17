@@ -57,25 +57,25 @@ def get_winner(text):
             
             Welke van de volgende opties geldt voor deze uitspraak? Kies 1 antwoord.
             
-            1. het beroep wordt gegrond verklaard. Het bestreden besluit wordt geheel of gedeeltelijk vernietigd
-            2. het beroep wordt niet-ontvankelijk verklaard.
-            3. De bestuursrechter kan bepalen dat:
-                a. de rechtsgevolgen van het vernietigde besluit of het vernietigde gedeelte daarvan geheel of gedeeltelijk in stand blijven, of
-                b. zijn uitspraak in de plaats treedt van het vernietigde besluit of het vernietigde gedeelte daarvan.
-            4. De bestuursrechter kan het bestuursorgaan opdragen een nieuw besluit te nemen of een andere handeling te verrichten met inachtneming van zijn aanwijzingen.
-            5. De bestuursrechter kan zo nodig een voorlopige voorziening treffen. Daarbij bepaalt hij het tijdstip waarop de voorlopige voorziening vervalt.
-            6. De bestuursrechter kan bepalen dat, indien of zolang het bestuursorgaan niet voldoet aan een uitspraak, het bestuursorgaan aan een door hem aangewezen partij een in de uitspraak vast te stellen dwangsom verbeurt.
-            7. De bestuursrechter verklaart zich onbevoegd om uitspraak te doen.
-            8. Anders
+            1. het beroep wordt niet-ontvankelijk verklaard.
+            2. de Raad van State bevestigt de aangevallen uitspraak
+            3. het beroep wordt gegrond verklaard. Het bestreden besluit wordt geheel vernietigd.
+            4. het beroep wordt gegrond verklaard. Het bestreden besluit wordt gedeeltelijk vernietigd. 
+                Dat betekent dat het beroep voor een deel gegrond wordt verklaard en voor een deel ongegrond
+            9. Anders
             
             Antwoord uitsluitend in een Python list met de volgende opzet: [<cijfer antwoord>, <text antwoord>] 
             """
+    try:
+        answer = send_prompt(prompt)
+    except openai.error.InvalidRequestError:
+        return None
 
-    answer = send_prompt(prompt)
     if answer:
-        return json.loads(answer)
-
-    return None
+        try:
+            return json.loads(answer)
+        except ValueError:
+            return None
 
 
 def get_parties(text):
