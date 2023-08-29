@@ -17,7 +17,8 @@ class Uitspraak(models.Model):
     label_choices = [
         ("NEW", "Nieuw"),
         ("TRU", "Goed"),
-        ("FAL", "Fout")
+        ("FAL", "Fout"),
+        ("UNK", "Weet niet")
     ]
 
     titel = models.CharField(max_length=100)
