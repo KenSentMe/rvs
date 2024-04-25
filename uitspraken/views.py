@@ -18,8 +18,11 @@ class IndexView(generic.ListView):
     context_object_name = "uitspraken"
     paginate_by = 25
 
+    exclude_trefwoorden_id = [9, 8, 6, 17, 31, 41, 42, 38, 45, 3, 16, 21, 26, 27, 28, 32, 39, 43, 47]
+
     def get_queryset(self):
-        queryset = Uitspraak.objects.all().order_by("id")
+
+        queryset = Uitspraak.objects.exclude(trefwoorden__id__in=self.exclude_trefwoorden_id).order_by("id")
         trefwoorden = self.request.GET.getlist('proceduresoort') + self.request.GET.getlist('rechtsgebied')
         if trefwoorden:
             queryset = queryset.filter(trefwoorden__id__in=trefwoorden).distinct().annotate(
@@ -32,10 +35,11 @@ class IndexView(generic.ListView):
         paginator = Paginator(self.get_queryset(), self.paginate_by)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+        trefwoorden = Trefwoord.objects.exclude(id__in=self.exclude_trefwoorden_id)
         context['page_obj'] = page_obj
-        context['all_trefwoorden'] = Trefwoord.objects.all()
-        context['proceduresoort_trefwoorden'] = Trefwoord.objects.filter(type="proceduresoort")
-        context['rechtsgebied_trefwoorden'] = Trefwoord.objects.filter(type="rechtsgebied")
+        context['all_trefwoorden'] = trefwoorden
+        context['proceduresoort_trefwoorden'] = trefwoorden.filter(type="proceduresoort")
+        context['rechtsgebied_trefwoorden'] = trefwoorden.filter(type="rechtsgebied")
         context['selected_proceduresoort'] = self.request.GET.getlist('proceduresoort')
         context['selected_rechtsgebied'] = self.request.GET.getlist('rechtsgebied')
 
