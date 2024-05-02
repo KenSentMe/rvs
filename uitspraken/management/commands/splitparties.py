@@ -1,6 +1,6 @@
 from uitspraken.utils import split_parties
 from uitspraken.models import Uitspraak
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -16,5 +16,3 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(f"Successfully split parties for {counter} out of {len(uitspraken)} uitspraken")
         )
-
-

@@ -2,20 +2,8 @@ from rvs.openai.gpt import get_winner, get_place, get_metadata
 
 
 def add_oordeel(uitspraak):
-    if uitspraak.oordeel != 0:
-        return
-    if "\nconclusie\n" in uitspraak.inhoud.lower():
-        index = uitspraak.inhoud.lower().find("\nconclusie\n")
-    else:
-        index = uitspraak.inhoud.lower().find("\nbeslissing\n")
-    if index != -1:
-        beslissing = uitspraak.inhoud[index:]
-    else:
-        beslissing = uitspraak.inhoud
 
-    beslissing_kort = beslissing.lower().split("\nbijlage")[0]
-
-    response = get_winner(beslissing_kort[:10000])
+    response = get_winner(uitspraak.beslissing[:10000])
 
     if response:
         uitspraak.oordeel = response[0]
@@ -77,6 +65,21 @@ def split_parties(uitspraak):
     if appellant and verweerder:
         uitspraak.appellant = appellant
         uitspraak.counterpart = verweerder
+        uitspraak.save()
+        return 1
+    else:
+        return 0
+
+
+def get_beslissing(uitspraak):
+    beslissing = ""
+    try:
+        beslissing = uitspraak.inhoud.split("\nDe Afdeling bestuursrechtspraak van de Raad van State:\n")[1].split("\nAldus vastgesteld door")[0]
+    except IndexError:
+        pass
+
+    if beslissing:
+        uitspraak.beslissing = beslissing
         uitspraak.save()
         return 1
     else:
