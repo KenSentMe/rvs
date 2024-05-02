@@ -57,7 +57,7 @@ class UitspraakView(generic.DetailView):
             print("Trefwoorden found")
             queryset = queryset.filter(trefwoorden__in=trefwoorden)
 
-        return queryset.order_by('id')
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

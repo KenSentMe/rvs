@@ -44,3 +44,40 @@ def add_metadata(uitspraak):
             uitspraak.save()
     else:
         return
+
+
+def split_parties(uitspraak):
+    text = uitspraak.inhoud
+    gedingteksten = [
+        "in het geding tussen:\n",
+        "in de gedingen tussen:\n",
+        "in het geding tussen onder meer:\n",
+        "in de gedingen tussen onder meer:\n",
+        "in het geding tussen[",
+    ]
+    procesverloopteksten = [
+        "\nProcesverloop",
+        ".Procesverloop",
+    ]
+    appellant = ""
+    verweerder = ""
+    for g in gedingteksten:
+        if g in text:
+            try:
+                appellant = text.split(f"{g}")[1].split("\nen")[0][:200]
+            except IndexError:
+                continue
+            for p in procesverloopteksten:
+                if p in text:
+                    try:
+                        verweerder = text.split(f"{g}")[1].split("\nen\n")[1].split(p)[0][:200]
+                    except IndexError:
+                        continue
+
+    if appellant and verweerder:
+        uitspraak.appellant = appellant
+        uitspraak.counterpart = verweerder
+        uitspraak.save()
+        return 1
+    else:
+        return 0
