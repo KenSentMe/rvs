@@ -36,6 +36,7 @@ class Uitspraak(models.Model):
     datum = models.DateField()
     link = models.URLField()
     inhoud = models.TextField()
+    beslissing = models.TextField(default="")
     trefwoorden = models.ManyToManyField(Trefwoord)
     oordeel = models.IntegerField(default=0)
     uitleg = models.CharField(max_length=250, default="")
