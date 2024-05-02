@@ -15,11 +15,10 @@ class Trefwoord(models.Model):
 class UitspraakManager(models.Manager):
     def get_queryset(self):
         exclude_trefwoorden_id = [9, 8, 6, 17, 31, 41, 42, 38, 45, 3, 16, 21, 26, 27, 28, 32, 39, 43, 47]
-        return super().get_queryset().exclude(trefwoorden__id__in=exclude_trefwoorden_id).order_by("id")[0:250]
+        return super().get_queryset().exclude(trefwoorden__id__in=exclude_trefwoorden_id).filter(datum__year=2022).order_by("id")
 
     def get_trefwoorden(self):
         return Trefwoord.objects.filter(uitspraak__in=self.get_queryset()).distinct()
-
 
 
 class Uitspraak(models.Model):
