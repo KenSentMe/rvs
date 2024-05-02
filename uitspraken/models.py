@@ -12,6 +12,16 @@ class Trefwoord(models.Model):
         return self.naam
 
 
+class UitspraakManager(models.Manager):
+    def get_queryset(self):
+        exclude_trefwoorden_id = [9, 8, 6, 17, 31, 41, 42, 38, 45, 3, 16, 21, 26, 27, 28, 32, 39, 43, 47]
+        return super().get_queryset().exclude(trefwoorden__id__in=exclude_trefwoorden_id).order_by("id")[0:250]
+
+    def get_trefwoorden(self):
+        return Trefwoord.objects.filter(uitspraak__in=self.get_queryset()).distinct()
+
+
+
 class Uitspraak(models.Model):
 
     label_choices = [
@@ -35,6 +45,8 @@ class Uitspraak(models.Model):
     label = models.CharField(max_length=3, choices=label_choices, default="NEW")
     appellant = models.CharField(max_length=250, default="")
     counterpart = models.CharField(max_length=250, default="")
+
+    objects = UitspraakManager()
 
     class Meta:
         verbose_name_plural = "Uitspraken"
