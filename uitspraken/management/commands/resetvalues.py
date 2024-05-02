@@ -18,5 +18,5 @@ class Command(BaseCommand):
             uitspraak.save()
 
         self.stdout.write(
-            self.style.SUCCESS(f"Successfully reset values for uitspraken")
+            self.style.SUCCESS(f"Successfully reset values for {len(uitspraken)} uitspraken")
         )
