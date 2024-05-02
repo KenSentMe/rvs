@@ -1,4 +1,4 @@
-from rvs.openai.gpt import get_winner, get_place, get_metadata
+from rvs.openai.gpt import get_place, get_metadata, get_clear_verdict, get_verdict
 
 
 def add_oordeel(uitspraak):
@@ -84,3 +84,25 @@ def get_beslissing(uitspraak):
         return 1
     else:
         return 0
+
+
+def get_first_verdict(uitspraak):
+    if uitspraak.beslissing:
+        oordeel = get_clear_verdict(uitspraak.beslissing[:10000])
+        if oordeel:
+            uitspraak.oordeel = oordeel
+            uitspraak.save()
+            return 1
+        else:
+            return 0
+
+
+def get_final_verdict(uitspraak):
+    if uitspraak.beslissing:
+        oordeel = get_verdict(uitspraak.beslissing[:10000])
+        if oordeel:
+            uitspraak.oordeel = oordeel
+            uitspraak.save()
+            return 1
+        else:
+            return 0
