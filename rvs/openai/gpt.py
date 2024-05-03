@@ -24,7 +24,6 @@ def send_prompt(prompt):
             max_tokens=100,
             n=1,
         )
-        print(response)
         answer = (
             response.choices[0].message.content.strip().strip('"').strip("!")
         )
@@ -64,7 +63,7 @@ Je bent een expert in het lezen van juridische uitspraken. Lees de volgende uits
 
 Er zijn 2 opties:
 
-1. Het beroep wordt ongegrond verklaard, de uitspraak van de rechtbank wordt bevestigd. Er worden verder geen voorwaarden gesteld.
+1. Het beroep wordt ongegrond verklaard, de uitspraak van de rechtbank wordt bevestigd. Er worden verder **geen** voorwaarden gesteld, zoals het betalen van proceskosten.
 2. Anders
 
 ### Output
@@ -86,13 +85,14 @@ IV. bepaalt dat van het college van burgemeester en wethouders van Berkelland ee
 """
         try:
             answer = send_prompt(prompt)
-        except OpenAIError:
+        except OpenAIError as e:
+            print(e)
             return None
 
         if answer:
             try:
                 return int(answer)
-            except ValueError:
+            except TypeError:
                 return None
 
 
@@ -148,8 +148,8 @@ VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan St
 
     if answer:
         try:
-            return json.loads(answer)
-        except ValueError:
+            return int(answer)
+        except TypeError:
             return None
 
 

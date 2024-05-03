@@ -87,18 +87,17 @@ def get_beslissing(uitspraak):
 
 
 def get_first_verdict(uitspraak):
-    if uitspraak.beslissing:
+    if uitspraak.beslissing and not uitspraak.oordeel:
         oordeel = get_clear_verdict(uitspraak.beslissing[:10000])
-        if oordeel:
+        if oordeel == 1:
             uitspraak.oordeel = oordeel
             uitspraak.save()
             return 1
-        else:
-            return 0
+    return 0
 
 
 def get_final_verdict(uitspraak):
-    if uitspraak.beslissing:
+    if uitspraak.beslissing and not uitspraak.oordeel:
         oordeel = get_verdict(uitspraak.beslissing[:10000])
         if oordeel:
             uitspraak.oordeel = oordeel
