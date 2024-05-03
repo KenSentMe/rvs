@@ -103,5 +103,5 @@ def get_final_verdict(uitspraak):
             uitspraak.oordeel = oordeel
             uitspraak.save()
             return 1
-        else:
-            return 0
+
+    return 0
