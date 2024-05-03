@@ -20,6 +20,15 @@ class UitspraakManager(models.Manager):
     def get_trefwoorden(self):
         return Trefwoord.objects.filter(uitspraak__in=self.get_queryset()).distinct()
 
+    def get_oordelen(self):
+        return self.get_queryset().values_list("oordeel", flat=True).order_by().distinct()
+
+    def get_labels(self):
+        label_choices = dict(Uitspraak.label_choices)
+        label_values = self.get_queryset().values_list("label", flat=True).order_by().distinct()
+        label_dict = {label: label_choices.get(label) for label in label_values if label in label_choices}
+        return label_dict
+
 
 class Uitspraak(models.Model):
 
