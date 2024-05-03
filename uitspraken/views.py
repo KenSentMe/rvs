@@ -5,9 +5,9 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 
 
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 
-from .models import Uitspraak, Trefwoord
+from .models import Uitspraak
 from .forms import LabelForm
 from .scraper import scrape_and_populate_database
 
@@ -20,6 +20,12 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         queryset = Uitspraak.objects.all()
+        labels = self.request.GET.getlist('label')
+        if labels:
+            queryset = queryset.filter(label__in=labels)
+        oordelen = self.request.GET.getlist('oordeel')
+        if oordelen:
+            queryset = queryset.filter(oordeel__in=oordelen)
         trefwoorden = self.request.GET.getlist('proceduresoort') + self.request.GET.getlist('rechtsgebied')
         if trefwoorden:
             queryset = queryset.filter(trefwoorden__id__in=trefwoorden).distinct().annotate(
@@ -33,12 +39,18 @@ class IndexView(generic.ListView):
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         trefwoorden = Uitspraak.objects.get_trefwoorden()
+        oordelen = Uitspraak.objects.get_oordelen()
+        labels = Uitspraak.objects.get_labels()
         context['page_obj'] = page_obj
         context['all_trefwoorden'] = trefwoorden
         context['proceduresoort_trefwoorden'] = trefwoorden.filter(type="proceduresoort")
         context['rechtsgebied_trefwoorden'] = trefwoorden.filter(type="rechtsgebied")
         context['selected_proceduresoort'] = self.request.GET.getlist('proceduresoort')
         context['selected_rechtsgebied'] = self.request.GET.getlist('rechtsgebied')
+        context['all_oordelen'] = oordelen
+        context['selected_oordelen'] = self.request.GET.getlist('oordelen')
+        context['all_labels'] = labels
+        context['selected_labels'] = self.request.GET.getlist('labels')
 
         return context
 
