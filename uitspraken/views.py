@@ -72,9 +72,7 @@ class UitspraakView(generic.DetailView):
         trefwoorden = self.request.GET.getlist('trefwoord')
 
         if trefwoorden:
-            print("Trefwoorden found")
             queryset = queryset.filter(trefwoorden__in=trefwoorden)
-        print(queryset.count())
         return queryset
 
     def get_context_data(self, **kwargs):
