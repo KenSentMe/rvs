@@ -12,6 +12,24 @@ class Trefwoord(models.Model):
         return self.naam
 
 
+class UitspraakManager(models.Manager):
+    def get_queryset(self):
+        exclude_trefwoorden_id = [9, 8, 6, 17, 31, 41, 42, 38, 45, 3, 16, 21, 26, 27, 28, 32, 39, 43, 47]
+        return super().get_queryset().exclude(trefwoorden__id__in=exclude_trefwoorden_id).filter(datum__year=2022).order_by("id")
+
+    def get_trefwoorden(self):
+        return Trefwoord.objects.filter(uitspraak__in=self.get_queryset()).distinct()
+
+    def get_oordelen(self):
+        return self.get_queryset().values_list("oordeel", flat=True).order_by().distinct()
+
+    def get_labels(self):
+        label_choices = dict(Uitspraak.label_choices)
+        label_values = self.get_queryset().values_list("label", flat=True).order_by().distinct()
+        label_dict = {label: label_choices.get(label) for label in label_values if label in label_choices}
+        return label_dict
+
+
 class Uitspraak(models.Model):
 
     label_choices = [
@@ -27,6 +45,7 @@ class Uitspraak(models.Model):
     datum = models.DateField()
     link = models.URLField()
     inhoud = models.TextField()
+    beslissing = models.TextField(default="")
     trefwoorden = models.ManyToManyField(Trefwoord)
     oordeel = models.IntegerField(default=0)
     uitleg = models.CharField(max_length=250, default="")
@@ -35,6 +54,8 @@ class Uitspraak(models.Model):
     label = models.CharField(max_length=3, choices=label_choices, default="NEW")
     appellant = models.CharField(max_length=250, default="")
     counterpart = models.CharField(max_length=250, default="")
+
+    objects = UitspraakManager()
 
     class Meta:
         verbose_name_plural = "Uitspraken"

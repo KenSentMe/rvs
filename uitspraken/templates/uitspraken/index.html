@@ -14,7 +14,7 @@
             </thead>
             <tbody>
                 {% for uitspraak in uitspraken %}
-                <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}">
+                <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}" data-oordeel="{{ selected_oordelen|join:',' }}" data-label="{{ selected_labels|join:',' }}">
                     <td>
                         <p>{{ uitspraak.titel }}</p>
                         <p>{{ uitspraak.datum }}</p>
@@ -34,7 +34,7 @@
                             <span class="badge badge-secondary">{{ uitspraak.oordeel }}</span>
                         </h3>
                     </td>
-                    <td>{{ uitspraak.samenvatting }}</td>
+                    <td>{{ uitspraak.beslissing }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -117,6 +117,24 @@
                             </div>
                         {% endfor %}
                     </div>
+                    <div class="form-group">
+                        <label>Filter by Oordeel:</label><br>
+                        {% for oordeel in all_oordelen %}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="oordeel-{{ oordeel }}" name="oordeel" value="{{ oordeel }}" {% if oordeel in selected_oordelen %}checked{% endif %}>
+                                <label class="form-check-label" for="oordeel-{{ oordeel }}">{{ oordeel }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <label>Filter by Label:</label><br>
+                        {% for label, value in all_labels.items %}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="label-{{ label }}" name="label" value="{{ label }}" {% if label in selected_labels %}checked{% endif %}>
+                                <label class="form-check-label" for="label-{{ label }}">{{ value }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
 
                     <button type="submit" class="btn btn-primary">Filter</button>
                     <a href="{% url 'uitspraken:index' %}" class="btn btn-secondary">Clear Filter</a>
@@ -141,9 +159,19 @@ document.addEventListener("DOMContentLoaded", function() {
            this.style.backgroundColor = "";
        });
        row.addEventListener("click", function() {
-           var url = this.dataset.href;
+           let url = this.dataset.href;
+           let oordelen = this.dataset.oordeel.split(',');
+           let oordeel_url = "";
+           if (oordelen.length > 0) {
+               oordeel_url = oordelen.map(o => `oordeel=${o}`).join('&');
+           }
+           let labels = this.dataset.label.split(',');
+           let label_url = "";
+           if (labels.length > 0) {
+               label_url = labels.map(l => `label=${l}`).join('&');
+           }
            if (url) {
-               window.location.href = url;
+               window.location.href = `${url}?${oordeel_url}&${label_url}`;
            }
        });
    });
