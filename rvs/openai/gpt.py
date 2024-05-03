@@ -104,8 +104,9 @@ Je bent een expert in het lezen van juridische uitspraken. Lees de volgende uits
 
 "{text}"
 
-Er zijn 10 opties:
+Er zijn 11 opties:
 
+1. Het beroep wordt ongegrond verklaard, de uitspraak van de rechtbank wordt bevestigd. Er worden verder **geen** voorwaarden gesteld, zoals het betalen van proceskosten.
 2. De aangevallen uitspraak wordt bevestigd. Maar de wederpartij wordt veroordeeld om proceskosten te voldoen.
 3. het beroep wordt gegrond verklaard en het bestreden besluit wordt geheel vernietigd
 4. het beroep wordt niet-ontvankelijk verklaard.
@@ -137,7 +138,7 @@ VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan St
 **Output:** 3
 
 ### Belangrijk
-- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 2 tot en met 11.
+- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 11.
 - Geef geen toelichting bij het antwoord.
 """
 
@@ -149,7 +150,7 @@ VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan St
     if answer:
         try:
             return int(answer)
-        except TypeError:
+        except TypeError or ValueError:
             return None
 
 
