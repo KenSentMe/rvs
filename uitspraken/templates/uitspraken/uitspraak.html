@@ -4,10 +4,10 @@
 
 <div class="navigation-button fixed">
 {% if previous_uitspraak %}
-  <a class="btn btn-primary" href="/uitspraken/{{ previous_uitspraak.id }}">Previous</a>
+  <a class="btn btn-primary" href="/uitspraken/{{ previous_uitspraak.id }}?{{ query_string }}">Previous</a>
 {% endif %}
 {% if next_uitspraak %}
-  <a class="btn btn-primary" href="/uitspraken/{{ next_uitspraak.id }}">Next</a>
+  <a class="btn btn-primary" href="/uitspraken/{{ next_uitspraak.id }}?{{ query_string }}">Next</a>
 {% endif %}
 </div>
 <div class="row">

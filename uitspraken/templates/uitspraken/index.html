@@ -14,7 +14,7 @@
             </thead>
             <tbody>
                 {% for uitspraak in uitspraken %}
-                <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}">
+                <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}" data-oordeel="{{ selected_oordelen|join:',' }}" data-label="{{ selected_labels|join:',' }}">
                     <td>
                         <p>{{ uitspraak.titel }}</p>
                         <p>{{ uitspraak.datum }}</p>
@@ -34,7 +34,7 @@
                             <span class="badge badge-secondary">{{ uitspraak.oordeel }}</span>
                         </h3>
                     </td>
-                    <td>{{ uitspraak.samenvatting }}</td>
+                    <td>{{ uitspraak.beslissing }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -159,9 +159,19 @@ document.addEventListener("DOMContentLoaded", function() {
            this.style.backgroundColor = "";
        });
        row.addEventListener("click", function() {
-           var url = this.dataset.href;
+           let url = this.dataset.href;
+           let oordelen = this.dataset.oordeel.split(',');
+           let oordeel_url = "";
+           if (oordelen.length > 0) {
+               oordeel_url = oordelen.map(o => `oordeel=${o}`).join('&');
+           }
+           let labels = this.dataset.label.split(',');
+           let label_url = "";
+           if (labels.length > 0) {
+               label_url = labels.map(l => `label=${l}`).join('&');
+           }
            if (url) {
-               window.location.href = url;
+               window.location.href = `${url}?${oordeel_url}&${label_url}`;
            }
        });
    });

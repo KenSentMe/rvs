@@ -48,9 +48,9 @@ class IndexView(generic.ListView):
         context['selected_proceduresoort'] = self.request.GET.getlist('proceduresoort')
         context['selected_rechtsgebied'] = self.request.GET.getlist('rechtsgebied')
         context['all_oordelen'] = oordelen
-        context['selected_oordelen'] = self.request.GET.getlist('oordelen')
+        context['selected_oordelen'] = self.request.GET.getlist('oordeel')
         context['all_labels'] = labels
-        context['selected_labels'] = self.request.GET.getlist('labels')
+        context['selected_labels'] = self.request.GET.getlist('label')
 
         return context
 
@@ -62,13 +62,19 @@ class UitspraakView(generic.DetailView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        labels = self.request.GET.getlist('label')
+        if labels and labels != ['']:
+            queryset = queryset.filter(label__in=labels)
+        oordelen = self.request.GET.getlist('oordeel')
+        if oordelen and oordelen != ['']:
+            queryset = queryset.filter(oordeel__in=oordelen)
 
         trefwoorden = self.request.GET.getlist('trefwoord')
 
         if trefwoorden:
             print("Trefwoorden found")
             queryset = queryset.filter(trefwoorden__in=trefwoorden)
-
+        print(queryset.count())
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -79,6 +85,7 @@ class UitspraakView(generic.DetailView):
         next_uitspraak = queryset.filter(id__gt=uitspraak.id).first()
         context['previous_uitspraak'] = previous_uitspraak
         context['next_uitspraak'] = next_uitspraak
+        context['query_string'] = self.request.META['QUERY_STRING']
         return context
 
 
