@@ -150,7 +150,7 @@ VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan St
     if answer:
         try:
             return int(answer)
-        except TypeError or ValueError:
+        except:
             return None
 
 
