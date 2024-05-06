@@ -18,7 +18,7 @@ def send_prompt(prompt):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0,
             max_tokens=100,
@@ -106,7 +106,7 @@ Je bent een expert in het lezen van juridische uitspraken. Lees de volgende uits
 
 Er zijn 11 opties:
 
-1. Het beroep wordt ongegrond verklaard, de uitspraak van de rechtbank wordt bevestigd. Er worden verder **geen** voorwaarden gesteld, zoals het betalen van proceskosten.
+1. Het beroep wordt ongegrond verklaard en/of de uitspraak wordt bevestigd. Er worden verder **geen** voorwaarden gesteld, zoals het betalen van proceskosten.
 2. De aangevallen uitspraak wordt bevestigd. Maar de wederpartij wordt veroordeeld om proceskosten te voldoen.
 3. het beroep wordt gegrond verklaard en het bestreden besluit wordt geheel vernietigd
 4. het beroep wordt niet-ontvankelijk verklaard.
@@ -140,6 +140,7 @@ VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan St
 ### Belangrijk
 - Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 11.
 - Geef geen toelichting bij het antwoord.
+- Herhaal de tekst niet in je antwoord.
 """
 
     try:

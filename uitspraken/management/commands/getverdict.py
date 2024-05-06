@@ -10,9 +10,7 @@ class Command(BaseCommand):
         counter = 0
         uitspraken = Uitspraak.objects.all()
         for uitspraak in uitspraken:
-            if not uitspraak.oordeel:
-                print(f"Getting final verdict for {uitspraak.id}")
-                counter += get_final_verdict(uitspraak)
+            counter += get_final_verdict(uitspraak)
 
         self.stdout.write(
             self.style.SUCCESS(f"Successfully got verdicts for {counter} out of {len(uitspraken)} uitspraken")
