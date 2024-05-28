@@ -14,7 +14,7 @@
             </thead>
             <tbody>
                 {% for uitspraak in uitspraken %}
-                <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}" data-oordeel="{{ selected_oordelen|join:',' }}" data-label="{{ selected_labels|join:',' }}">
+                <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}" data-oordeel="{{ selected_oordelen|join:',' }}" data-label="{{ selected_labels|join:',' }}" data-letter="{{ selected_letters|join:',' }}">
                     <td>
                         <p>{{ uitspraak.titel }}</p>
                         <p>{{ uitspraak.datum }}</p>
@@ -32,6 +32,13 @@
                         <h3>
                             <span class="badge badge-dark">{{ uitspraak.get_label_display }}</span>
                             <span class="badge badge-secondary">{{ uitspraak.oordeel }}</span>
+                        </h3>
+                        <h3>
+                            {% if uitspraak.letters %}
+                                {% for letter in uitspraak.letters.all %}
+                                    <span class="badge badge-warning">{{ letter.letter }}</span>
+                                {% endfor %}
+                            {% endif %}
                         </h3>
                     </td>
                     <td>{{ uitspraak.beslissing }}</td>
@@ -135,7 +142,15 @@
                             </div>
                         {% endfor %}
                     </div>
-
+                    <div class="form-group">
+                        <label>Filter by letter:</label><br>
+                        {% for letter in all_letters %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="letter-{{ letter.letter }}" name="letter" value="{{ letter.letter }}" {% if letter.letter in selected_letters %}checked{% endif %}>
+                                <label class="form-check-label" for="letter-{{ letter.letter }}">{{ letter.letter }} - {{ letter.description }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
                     <button type="submit" class="btn btn-primary">Filter</button>
                     <a href="{% url 'uitspraken:index' %}" class="btn btn-secondary">Clear Filter</a>
                 </form>
@@ -159,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function() {
            this.style.backgroundColor = "";
        });
        row.addEventListener("click", function() {
+           console.log(this.dataset)
            let url = this.dataset.href;
            let oordelen = this.dataset.oordeel.split(',');
            let oordeel_url = "";
@@ -170,8 +186,13 @@ document.addEventListener("DOMContentLoaded", function() {
            if (labels.length > 0) {
                label_url = labels.map(l => `label=${l}`).join('&');
            }
+           let letters = this.dataset.letter.split(',');
+           let letter_url = "";
+           if (letters.length > 0) {
+               letter_url = letters.map(l => `letter=${l}`).join('&');
+           }
            if (url) {
-               window.location.href = `${url}?${oordeel_url}&${label_url}`;
+               window.location.href = `${url}?${oordeel_url}&${label_url}&${letter_url}`;
            }
        });
    });

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Uitspraak, Trefwoord
+from .models import Uitspraak, Trefwoord, Letter
 from django.urls import reverse
 from django.utils.html import format_html
 
@@ -58,3 +58,8 @@ class UitsprakenAdmin(admin.ModelAdmin):
 @admin.register(Trefwoord)
 class KeywordAdmin(admin.ModelAdmin):
     list_display = ["naam", "type"]
+
+
+@admin.register(Letter)
+class LetterAdmin(admin.ModelAdmin):
+    list_display = ["letter", "description"]

@@ -14,6 +14,11 @@
     <div class="col-md-6">
         <h1 class="d-inline">
             {{ uitspraak.titel }}
+            {% if uitspraak.letters %}
+                {% for letter in uitspraak.letters.all %}
+                    <span class="badge badge-warning">{{ letter.letter }}</span>
+                {% endfor %}
+            {% endif %}
         </h1>
         <h3>
             <span class="badge badge-success">{{ uitspraak.plaats }}</span>

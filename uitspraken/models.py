@@ -12,6 +12,15 @@ class Trefwoord(models.Model):
         return self.naam
 
 
+class Letter(models.Model):
+    letter = models.CharField(max_length=1)
+    description = models.CharField(max_length=100)
+
+    def __str__(self):
+        output = f"{self.letter} - {self.description}"
+        return output
+
+
 class UitspraakManager(models.Manager):
     def get_queryset(self):
         exclude_trefwoorden_id = [9, 8, 6, 17, 31, 41, 42, 38, 45, 3, 16, 21, 26, 27, 28, 32, 39, 43, 47]
@@ -28,6 +37,9 @@ class UitspraakManager(models.Manager):
         label_values = self.get_queryset().values_list("label", flat=True).order_by().distinct()
         label_dict = {label: label_choices.get(label) for label in label_values if label in label_choices}
         return label_dict
+
+    def get_letters(self):
+        return Letter.objects.filter(uitspraak__in=self.get_queryset()).distinct()
 
 
 class Uitspraak(models.Model):
@@ -54,6 +66,7 @@ class Uitspraak(models.Model):
     label = models.CharField(max_length=3, choices=label_choices, default="NEW")
     appellant = models.CharField(max_length=250, default="")
     counterpart = models.CharField(max_length=250, default="")
+    letters = models.ManyToManyField(Letter)
 
     objects = UitspraakManager()
 

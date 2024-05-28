@@ -199,3 +199,38 @@ def get_metadata(text):
             return json.loads(answer)
         except ValueError:
             return None
+
+
+def get_letter_labels(text, labels):
+
+    collected_letters = []
+
+    for letter, label in labels.items():
+
+        prompt = f"""
+    ### Instructie        
+    Je bent een expert in het lezen van juridische uitspraken. Lees de volgende uitspraak van de Raad van State:
+    
+    "{text}"
+    
+    Is het volgende van toepassing op deze uitspraak?
+    
+    {label}
+    
+    ### Output
+    Antwoord met ja of nee.
+    
+    ### Belangrijk
+    - Geef als antwoord uitsluitend ja of nee.
+    - Geef geen toelichting bij het antwoord.
+    - Herhaal de tekst niet in je antwoord.
+        """
+
+        print("Checking for label: ", label)
+        answer = send_prompt(prompt)
+
+        if answer.lower().strip() == "ja":
+            print(f"Dit is van toepassing op deze uitspraak.")
+            collected_letters.append(letter)
+
+    return collected_letters
