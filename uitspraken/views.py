@@ -71,16 +71,17 @@ class UitspraakView(generic.DetailView):
         labels = self.request.GET.getlist('label')
         if labels and labels != ['']:
             queryset = queryset.filter(label__in=labels)
+
         oordelen = self.request.GET.getlist('oordeel')
         if oordelen and oordelen != ['']:
             queryset = queryset.filter(oordeel__in=oordelen)
 
         trefwoorden = self.request.GET.getlist('trefwoord')
-
         if trefwoorden:
             queryset = queryset.filter(trefwoorden__in=trefwoorden)
+
         letters = self.request.GET.getlist('letter')
-        if letters:
+        if letters and letters != ['']:
             queryset = queryset.filter(letters__letter__in=letters)
         return queryset
 
