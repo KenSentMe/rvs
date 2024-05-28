@@ -31,6 +31,9 @@ class IndexView(generic.ListView):
             queryset = queryset.filter(trefwoorden__id__in=trefwoorden).distinct().annotate(
                 num_trefwoorden=Count('trefwoorden')).filter(num_trefwoorden=len(trefwoorden))
             return queryset
+        letters = self.request.GET.getlist('letter')
+        if letters:
+            queryset = queryset.filter(letters__letter__in=letters)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -41,6 +44,7 @@ class IndexView(generic.ListView):
         trefwoorden = Uitspraak.objects.get_trefwoorden()
         oordelen = Uitspraak.objects.get_oordelen()
         labels = Uitspraak.objects.get_labels()
+        letters = Uitspraak.objects.get_letters()
         context['page_obj'] = page_obj
         context['all_trefwoorden'] = trefwoorden
         context['proceduresoort_trefwoorden'] = trefwoorden.filter(type="proceduresoort")
@@ -51,6 +55,8 @@ class IndexView(generic.ListView):
         context['selected_oordelen'] = self.request.GET.getlist('oordeel')
         context['all_labels'] = labels
         context['selected_labels'] = self.request.GET.getlist('label')
+        context['all_letters'] = letters
+        context['selected_letters'] = self.request.GET.getlist('letter')
 
         return context
 
@@ -73,6 +79,9 @@ class UitspraakView(generic.DetailView):
 
         if trefwoorden:
             queryset = queryset.filter(trefwoorden__in=trefwoorden)
+        letters = self.request.GET.getlist('letter')
+        if letters:
+            queryset = queryset.filter(letters__letter__in=letters)
         return queryset
 
     def get_context_data(self, **kwargs):

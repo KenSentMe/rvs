@@ -1,4 +1,5 @@
-from rvs.openai.gpt import get_place, get_metadata, get_clear_verdict, get_verdict
+from rvs.openai.gpt import get_place, get_metadata, get_clear_verdict, get_verdict, get_letter_labels
+from uitspraken.models import Letter
 
 
 def add_oordeel(uitspraak):
@@ -105,4 +106,19 @@ def get_final_verdict(uitspraak):
             uitspraak.save()
             return 1
 
+    return 0
+
+
+def get_letter(uitspraak):
+    if uitspraak.beslissing and not uitspraak.letters.all():
+        available_letters = Letter.objects.all()
+        letter_dict = {}
+        for letter in available_letters:
+            letter_dict[letter.letter] = letter.description
+        collected_letters = get_letter_labels(uitspraak.beslissing[:10000], letter_dict)
+        if collected_letters:
+            for letter in collected_letters:
+                uitspraak.letters.add(Letter.objects.get(letter=letter))
+            uitspraak.save()
+            return 1
     return 0
