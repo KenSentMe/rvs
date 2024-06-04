@@ -34,7 +34,7 @@
             </select>
         </div>
     </div>
-    <p><strong>{{ uitspraak.appellant }}</strong><br/>
+    <p><strong>{{ uitspraak.appellant }}</strong>{% if uitspraak.appellant_types %}{% for type in uitspraak.appellant_types %}<span class="badge badge-danger">{{ type }}</span>{% endfor %}{% endif %}<br/>
         vs<br/>
         <strong>{{ uitspraak.counterpart }}</strong></p>
 </div>

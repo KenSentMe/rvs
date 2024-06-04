@@ -45,6 +45,7 @@ class IndexView(generic.ListView):
         oordelen = Uitspraak.objects.get_oordelen()
         labels = Uitspraak.objects.get_labels()
         letters = Uitspraak.objects.get_letters()
+        appellant_types = Uitspraak.objects.get_appellant_types()
         context['page_obj'] = page_obj
         context['all_trefwoorden'] = trefwoorden
         context['proceduresoort_trefwoorden'] = trefwoorden.filter(type="proceduresoort")
@@ -57,6 +58,7 @@ class IndexView(generic.ListView):
         context['selected_labels'] = self.request.GET.getlist('label')
         context['all_letters'] = letters
         context['selected_letters'] = self.request.GET.getlist('letter')
+        context['all_appellant_types'] = appellant_types
 
         return context
 

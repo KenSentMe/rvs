@@ -40,6 +40,13 @@
                                 {% endfor %}
                             {% endif %}
                         </h3>
+                        <h3>
+                            {% if uitspraak.appellant_types %}
+                                {% for a in uitspraak.appellant_types.all %}
+                                    <span class="badge badge-danger">{{ a.type }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </h3>
                     </td>
                     <td>{{ uitspraak.beslissing }}</td>
                 </tr>
