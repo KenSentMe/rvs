@@ -104,19 +104,17 @@ Je bent een expert in het lezen van juridische uitspraken. Lees de volgende uits
 
 "{text}"
 
-Er zijn 11 opties:
+Er zijn 9 opties:
 
 1. Het beroep wordt ongegrond verklaard en/of de uitspraak wordt bevestigd. Er worden verder **geen** voorwaarden gesteld, zoals het betalen van proceskosten.
 2. De aangevallen uitspraak wordt bevestigd. Maar de wederpartij wordt veroordeeld om proceskosten te voldoen.
 3. het beroep wordt gegrond verklaard en het bestreden besluit wordt geheel vernietigd
 4. het beroep wordt niet-ontvankelijk verklaard.
-5. De bestuursrechter kan bepalen dat de rechtsgevolgen van het vernietigde besluit of het vernietigde gedeelte daarvan geheel of gedeeltelijk in stand blijven, of
-6. De bestuursrechter kan bepalen dat zijn uitspraak in de plaats treedt van het vernietigde besluit of het vernietigde gedeelte daarvan.
-7. De bestuursrechter kan het bestuursorgaan opdragen een nieuw besluit te nemen of een andere handeling te verrichten met inachtneming van zijn aanwijzingen.
-8. De bestuursrechter kan zo nodig een voorlopige voorziening treffen. Daarbij bepaalt hij het tijdstip waarop de voorlopige voorziening vervalt.
-9. De bestuursrechter kan bepalen dat, indien of zolang het bestuursorgaan niet voldoet aan een uitspraak, het bestuursorgaan aan een door hem aangewezen partij een in de uitspraak vast te stellen dwangsom verbeurt.
-10. De bestuursrechter verklaart zich onbevoegd om uitspraak te doen.
-11. Anders
+5. De bestuursrechter kan bepalen dat de rechtsgevolgen van het vernietigde besluit of het vernietigde gedeelte daarvan geheel of gedeeltelijk in stand blijven
+6. De bestuursrechter kan zo nodig een voorlopige voorziening treffen. Daarbij bepaalt hij het tijdstip waarop de voorlopige voorziening vervalt.
+7. De bestuursrechter kan bepalen dat, indien of zolang het bestuursorgaan niet voldoet aan een uitspraak, het bestuursorgaan aan een door hem aangewezen partij een in de uitspraak vast te stellen dwangsom verbeurt.
+8. De bestuursrechter verklaart zich onbevoegd om uitspraak te doen.
+9. Anders
 
 ### Output
 Geef het nummer van de optie die volgens jou van toepassing is.
@@ -138,7 +136,7 @@ VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan St
 **Output:** 3
 
 ### Belangrijk
-- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 11.
+- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 9.
 - Geef geen toelichting bij het antwoord.
 - Herhaal de tekst niet in je antwoord.
 """
