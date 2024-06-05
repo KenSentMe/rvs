@@ -1,5 +1,5 @@
-from rvs.openai.gpt import get_place, get_metadata, get_clear_verdict, get_verdict, get_letter_labels
-from uitspraken.models import Letter
+from rvs.openai.gpt import get_place, get_metadata, get_clear_verdict, get_verdict, get_letter_labels, get_appellant_type_labels
+from uitspraken.models import Letter, AppellantType
 
 
 def add_oordeel(uitspraak):
@@ -119,6 +119,19 @@ def get_letter(uitspraak):
         if collected_letters:
             for letter in collected_letters:
                 uitspraak.letters.add(Letter.objects.get(letter=letter))
+            uitspraak.save()
+            return 1
+    return 0
+
+
+def get_appellant_type(uitspraak):
+    if uitspraak.beslissing and not uitspraak.appellant_types.all():
+        available_types = AppellantType.objects.all()
+
+        appellant_types = get_appellant_type_labels(uitspraak.samenvatting[:1000], available_types)
+        if appellant_types:
+            for t in appellant_types:
+                uitspraak.appellant_types.add(AppellantType.objects.get(type=t))
             uitspraak.save()
             return 1
     return 0
