@@ -232,3 +232,38 @@ def get_letter_labels(text, labels):
             collected_letters.append(letter)
 
     return collected_letters
+
+
+def get_appellant_type_labels(text, types):
+
+    collected_types = []
+
+    for t in types:
+
+        prompt = f"""
+    ### Instructie        
+    Je bent een expert in het lezen van juridische uitspraken. Lees de tekst van de Raad van State:
+    
+    "{text}"
+    
+    Is de appellant of een van de appellanten van het volgende type?
+    
+    {t}
+    
+    ### Output
+    Antwoord met ja of nee.
+    
+    ### Belangrijk
+    - Geef als antwoord uitsluitend ja of nee.
+    - Geef geen toelichting bij het antwoord.
+    - Herhaal de tekst niet in je antwoord.
+        """
+
+        print("Checking for type: ", t)
+        answer = send_prompt(prompt)
+
+        if answer.lower().strip() == "ja":
+            print(f"Dit is van toepassing op deze uitspraak.")
+            collected_types.append(t)
+
+    return collected_types
