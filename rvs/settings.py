@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'uitspraken',
     'bootstrap4',
     'rvs',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

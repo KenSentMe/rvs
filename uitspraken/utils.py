@@ -79,6 +79,18 @@ def get_beslissing(uitspraak):
     except IndexError:
         pass
 
+    try:
+        beslissing = uitspraak.inhoud.split("\nDe voorzieningenrechter van de Afdeling bestuursrechtspraak van de Raad van State:\n")[1].split("\nAldus vastgesteld door")[0]
+    except IndexError:
+        pass
+
+    try:
+        beslissing = uitspraak.inhoud.split(
+            "\nDe voorzieningenrechter:\n")[1].split(
+            "\nAldus vastgesteld door")[0]
+    except IndexError:
+        pass
+
     if beslissing:
         uitspraak.beslissing = beslissing
         uitspraak.save()
