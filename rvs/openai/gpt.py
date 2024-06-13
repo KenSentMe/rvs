@@ -104,20 +104,17 @@ Je bent een expert in het lezen van juridische uitspraken. Lees de volgende uits
 
 "{text}"
 
-Er zijn 9 opties:
-
-1. Het beroep wordt ongegrond verklaard en/of de uitspraak wordt bevestigd. Er worden verder **geen** voorwaarden gesteld, zoals het betalen van proceskosten.
-2. De aangevallen uitspraak wordt bevestigd. Maar de wederpartij wordt veroordeeld om proceskosten te voldoen.
-3. het beroep wordt gegrond verklaard en het bestreden besluit wordt geheel vernietigd
-4. het beroep wordt niet-ontvankelijk verklaard.
-5. De bestuursrechter kan bepalen dat de rechtsgevolgen van het vernietigde besluit of het vernietigde gedeelte daarvan geheel of gedeeltelijk in stand blijven
-6. De bestuursrechter kan zo nodig een voorlopige voorziening treffen. Daarbij bepaalt hij het tijdstip waarop de voorlopige voorziening vervalt.
-7. De bestuursrechter kan bepalen dat, indien of zolang het bestuursorgaan niet voldoet aan een uitspraak, het bestuursorgaan aan een door hem aangewezen partij een in de uitspraak vast te stellen dwangsom verbeurt.
-8. De bestuursrechter verklaart zich onbevoegd om uitspraak te doen.
-9. Anders
-
-### Output
-Geef het nummer van de optie die volgens jou van toepassing is.
+2. Als in de beslissing meerdere uitspraken worden gedaan over dezelfde situatie, 
+kijk dan alleen naar de uitspraak over de meest recente situatie.
+3. Het iet ontvankelijk wordt verklaard van __alle__ appellanten, dan is [oordeel] = 1. Ga naar stap 11. 
+4. Als de bestuursrechter zich onbevoegd verklaart om uitspraak te doen, dan is [oordeel] = 2. Ga naar stap 11.
+5. Als de bestuursrechter een voorlopige voorziening toewijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 11.
+6. Als het beroep geheel ongegrond wordt verklaard, dan is [oordeel] = 4. Ga naar stap 11.
+7. Als het beroep geheel gegrond wordt verklaard, dan is [oordeel] = 5. Ga naar stap 11.
+8. Als het beroep gedeeltelijk gegrond wordt verklaard en het bestreden besluit wordt gedeeltelijk vernietigd en er wordt bepaald dat deze uitspraak in zoverre in de plaats treedt van het vernietigde deel van het besluit. Dan is [oordeel] = 6. Ga naar stap 11.
+9. Als het beroep gedeeltelijk gegrond wordt verklaard en de bestuursrechter draagt het bestuursorgaan op om een nieuw besluit te nemen, dan is [oordeel] = 7. Ga naar stap 11.
+10. In alle andere gevallen is [oordeel] = 8. Ga naar stap 11.
+11. Geef als output de waarde van [oordeel].
 
 ### Voorbeelden
 
@@ -125,7 +122,7 @@ Geef het nummer van de optie die volgens jou van toepassing is.
 II. verklaart het beroep van [partij] tegen het besluit van 10 mei 2021, kenmerk 153300, ongegrond;
 III. veroordeelt het college van burgemeester en wethouders van Berkelland tot vergoeding van bij [partij] in verband met de behandeling van het hoger beroep van het college opgekomen proceskosten tot een bedrag van € 759,00, geheel toe te rekenen aan door een derde beroepsmatig verleende rechtsbijstand;
 IV. bepaalt dat van het college van burgemeester en wethouders van Berkelland een griffierecht van € 541,00 wordt geheven."
-**Output:** 2
+**Output:** 4
 - **Input: ** "I. verklaart het hoger beroep gegrond;
 II. vernietigt de uitspraak van de rechtbank Den Haag van 26 maart 2021 in zaak nr. 19/3218;
 III. verklaart het bij de rechtbank ingestelde beroep gegrond;
@@ -133,10 +130,10 @@ IV. vernietigt het besluit van het college van burgemeester en wethouders van Oe
 V. draagt het college van burgemeester en wethouders van Oegstgeest op om binnen 26 weken na de verzending van deze uitspraak met inachtneming van wat daarin is overwogen een nieuw besluit op bezwaar te nemen;
 VI. bepaalt dat tegen het nieuw te nemen besluit op bezwaar slechts bij de Afdeling bestuursrechtspraak van de Raad van State beroep kan worden ingesteld;
 VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan Stichting Dorpscentrum Oegstgeest en andere het door hen voor de behandeling van het beroep en het hoger beroep betaalde griffierecht ten bedrage van € 717,00 vergoedt, met dien verstande dat bij betaling van genoemd bedrag aan een van hen het college aan zijn betalingsverplichting heeft voldaan."
-**Output:** 3
+**Output:** 5
 
 ### Belangrijk
-- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 9.
+- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 8.
 - Geef geen toelichting bij het antwoord.
 - Herhaal de tekst niet in je antwoord.
 """
