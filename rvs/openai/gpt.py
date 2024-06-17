@@ -99,17 +99,22 @@ IV. bepaalt dat van het college van burgemeester en wethouders van Berkelland ee
 def get_verdict(text):
 
     prompt = f"""
-### Instructie        
-Je bent een expert in het lezen van juridische uitspraken. Lees de volgende uitspraak van de Raad van State:
+### Opdracht       
+Je bent een expert in het lezen van juridische uitspraken. Je leest zo een beslissing van de Nederlandse Raad van State
+en bepaalt wat van toepassing is en slaat het antwoord op in de variabele [oordeel] in de vorm van een cijfer.
+
+
+### Instructie:
+1. Lees de volgende uitspraak van de Raad van State:
 
 "{text}"
 
 2. Als in de beslissing meerdere uitspraken worden gedaan over dezelfde situatie, 
 kijk dan alleen naar de uitspraak over de meest recente situatie.
-3. Het iet ontvankelijk wordt verklaard van __alle__ appellanten, dan is [oordeel] = 1. Ga naar stap 11. 
+3. Als het beroep niet ontvankelijk wordt verklaard van __alle__ appellanten, dan is [oordeel] = 1. Ga naar stap 11. 
 4. Als de bestuursrechter zich onbevoegd verklaart om uitspraak te doen, dan is [oordeel] = 2. Ga naar stap 11.
 5. Als de bestuursrechter een voorlopige voorziening toewijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 11.
-6. Als het beroep geheel ongegrond wordt verklaard, dan is [oordeel] = 4. Ga naar stap 11.
+6. Als het beroep geheel ongegrond wordt verklaard en/of de aangevallen uitspraak wordt geheel bevestigd, dan is [oordeel] = 4. Ga naar stap 11.
 7. Als het beroep geheel gegrond wordt verklaard, dan is [oordeel] = 5. Ga naar stap 11.
 8. Als het beroep gedeeltelijk gegrond wordt verklaard en het bestreden besluit wordt gedeeltelijk vernietigd en er wordt bepaald dat deze uitspraak in zoverre in de plaats treedt van het vernietigde deel van het besluit. Dan is [oordeel] = 6. Ga naar stap 11.
 9. Als het beroep gedeeltelijk gegrond wordt verklaard en de bestuursrechter draagt het bestuursorgaan op om een nieuw besluit te nemen, dan is [oordeel] = 7. Ga naar stap 11.
