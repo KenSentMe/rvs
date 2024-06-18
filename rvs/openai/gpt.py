@@ -18,7 +18,7 @@ def send_prompt(prompt):
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4-turbo",
+            model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
             temperature=0,
             max_tokens=100,
@@ -109,16 +109,17 @@ en bepaalt wat van toepassing is en slaat het antwoord op in de variabele [oorde
 
 "{text}"
 
-2. Als in de beslissing meerdere uitspraken worden gedaan over dezelfde situatie, 
-kijk dan alleen naar de uitspraak over de meest recente situatie.
-3. Als het beroep niet ontvankelijk wordt verklaard van __alle__ appellanten, dan is [oordeel] = 1. Ga naar stap 11. 
-4. Als de bestuursrechter zich onbevoegd verklaart om uitspraak te doen, dan is [oordeel] = 2. Ga naar stap 11.
+2. Als het beroep niet ontvankelijk wordt verklaard van __alle__ appellanten, dan is [oordeel] = 1. Ga naar stap 11. 
+3. Als de bestuursrechter zich onbevoegd verklaart om uitspraak te doen, dan is [oordeel] = 2. Ga naar stap 11.
+4. Als de bestuursrechter een voorlopige voorziening afwijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 11.
 5. Als de bestuursrechter een voorlopige voorziening toewijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 11.
-6. Als het beroep geheel ongegrond wordt verklaard en/of de aangevallen uitspraak wordt geheel bevestigd, dan is [oordeel] = 4. Ga naar stap 11.
-7. Als het beroep geheel gegrond wordt verklaard, dan is [oordeel] = 5. Ga naar stap 11.
-8. Als het beroep gedeeltelijk gegrond wordt verklaard en het bestreden besluit wordt gedeeltelijk vernietigd en er wordt bepaald dat deze uitspraak in zoverre in de plaats treedt van het vernietigde deel van het besluit. Dan is [oordeel] = 6. Ga naar stap 11.
-9. Als het beroep gedeeltelijk gegrond wordt verklaard en de bestuursrechter draagt het bestuursorgaan op om een nieuw besluit te nemen, dan is [oordeel] = 7. Ga naar stap 11.
-10. In alle andere gevallen is [oordeel] = 8. Ga naar stap 11.
+6. Als in de beslissing meerdere uitspraken worden gedaan over dezelfde situatie en de situaties zijn met elkaar in tegenspraak, bijvoorbeeld eerst gegrond en daarna/op een later tijdstip ongegrond, dan is [oordeel] = 4. Ga naar stap 11. 
+7. Als het beroep geheel ongegrond wordt verklaard en/of de aangevallen uitspraak wordt geheel bevestigd en/of er wordt bepaald dat de rechtsgevolgen geheel in stand blijven en/of draagt op de geconstateerde gebreken te herstellen door een ander besluit te nemen, dan is [oordeel] = 5. Ga naar stap 11.
+8. Als het beroep geheel gegrond wordt verklaard, maar de rechtsgevolgen blijven in stand, dan is [oordeel] = 6. Ga naar stap 11.
+7. Als het beroep __geheel__ gegrond wordt verklaard, dan is [oordeel] = 7. Ga naar stap 11.
+8. Als het beroep gedeeltelijk gegrond wordt verklaard en het bestreden besluit wordt gedeeltelijk vernietigd en er wordt bepaald dat deze uitspraak in zoverre in de plaats treedt van het vernietigde deel van het besluit. Dan is [oordeel] = 8. Ga naar stap 11.
+9. Als het beroep gedeeltelijk gegrond wordt verklaard en de bestuursrechter draagt het bestuursorgaan op om een nieuw besluit te nemen, dan is [oordeel] = 9. Ga naar stap 11.
+10. In alle andere gevallen is [oordeel] = 10. Ga naar stap 11.
 11. Geef als output de waarde van [oordeel].
 
 ### Voorbeelden
@@ -127,7 +128,7 @@ kijk dan alleen naar de uitspraak over de meest recente situatie.
 II. verklaart het beroep van [partij] tegen het besluit van 10 mei 2021, kenmerk 153300, ongegrond;
 III. veroordeelt het college van burgemeester en wethouders van Berkelland tot vergoeding van bij [partij] in verband met de behandeling van het hoger beroep van het college opgekomen proceskosten tot een bedrag van € 759,00, geheel toe te rekenen aan door een derde beroepsmatig verleende rechtsbijstand;
 IV. bepaalt dat van het college van burgemeester en wethouders van Berkelland een griffierecht van € 541,00 wordt geheven."
-**Output:** 4
+**Output:** 6
 - **Input: ** "I. verklaart het hoger beroep gegrond;
 II. vernietigt de uitspraak van de rechtbank Den Haag van 26 maart 2021 in zaak nr. 19/3218;
 III. verklaart het bij de rechtbank ingestelde beroep gegrond;
@@ -135,10 +136,10 @@ IV. vernietigt het besluit van het college van burgemeester en wethouders van Oe
 V. draagt het college van burgemeester en wethouders van Oegstgeest op om binnen 26 weken na de verzending van deze uitspraak met inachtneming van wat daarin is overwogen een nieuw besluit op bezwaar te nemen;
 VI. bepaalt dat tegen het nieuw te nemen besluit op bezwaar slechts bij de Afdeling bestuursrechtspraak van de Raad van State beroep kan worden ingesteld;
 VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan Stichting Dorpscentrum Oegstgeest en andere het door hen voor de behandeling van het beroep en het hoger beroep betaalde griffierecht ten bedrage van € 717,00 vergoedt, met dien verstande dat bij betaling van genoemd bedrag aan een van hen het college aan zijn betalingsverplichting heeft voldaan."
-**Output:** 5
+**Output:** 8
 
 ### Belangrijk
-- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 8.
+- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 10.
 - Geef geen toelichting bij het antwoord.
 - Herhaal de tekst niet in je antwoord.
 """
