@@ -113,13 +113,13 @@ en bepaalt wat van toepassing is en slaat het antwoord op in de variabele [oorde
 3. Als de bestuursrechter zich onbevoegd verklaart om uitspraak te doen, dan is [oordeel] = 2. Ga naar stap 11.
 4. Als de bestuursrechter een voorlopige voorziening afwijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 11.
 5. Als de bestuursrechter een voorlopige voorziening toewijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 11.
-6. Als in de beslissing meerdere uitspraken worden gedaan over dezelfde situatie en de situaties zijn met elkaar in tegenspraak, bijvoorbeeld eerst gegrond en daarna/op een later tijdstip ongegrond, dan is [oordeel] = 5. Ga naar stap 11. 
-7. Als het beroep geheel ongegrond wordt verklaard en/of de aangevallen uitspraak wordt geheel bevestigd en/of er wordt bepaald dat de rechtsgevolgen geheel in stand blijven en/of draagt op de geconstateerde gebreken te herstellen door een ander besluit te nemen, dan is [oordeel] = 6. Ga naar stap 11.
-8. Als het beroep geheel gegrond wordt verklaard, maar de rechtsgevolgen blijven in stand, dan is [oordeel] = 7. Ga naar stap 11.
-7. Als het beroep __geheel__ gegrond wordt verklaard, dan is [oordeel] = 8. Ga naar stap 11.
-8. Als het beroep gedeeltelijk gegrond wordt verklaard en het bestreden besluit wordt gedeeltelijk vernietigd en er wordt bepaald dat deze uitspraak in zoverre in de plaats treedt van het vernietigde deel van het besluit. Dan is [oordeel] = 9. Ga naar stap 11.
-9. Als het beroep gedeeltelijk gegrond wordt verklaard en de bestuursrechter draagt het bestuursorgaan op om een nieuw besluit te nemen, dan is [oordeel] = 10. Ga naar stap 11.
-10. In alle andere gevallen is [oordeel] = 11. Ga naar stap 11.
+6. Als in de beslissing meerdere uitspraken worden gedaan over dezelfde situatie en de situaties zijn met elkaar in tegenspraak, bijvoorbeeld eerst gegrond en daarna/op een later tijdstip ongegrond, dan is [oordeel] = 4. Ga naar stap 11. 
+7. Als het beroep geheel ongegrond wordt verklaard en/of de aangevallen uitspraak wordt geheel bevestigd en/of er wordt bepaald dat de rechtsgevolgen geheel in stand blijven en/of draagt op de geconstateerde gebreken te herstellen door een ander besluit te nemen, dan is [oordeel] = 5. Ga naar stap 11.
+8. Als het beroep geheel gegrond wordt verklaard, maar de rechtsgevolgen blijven in stand, dan is [oordeel] = 6. Ga naar stap 11.
+7. Als het beroep __geheel__ gegrond wordt verklaard, dan is [oordeel] = 7. Ga naar stap 11.
+8. Als het beroep gedeeltelijk gegrond wordt verklaard en het bestreden besluit wordt gedeeltelijk vernietigd en er wordt bepaald dat deze uitspraak in zoverre in de plaats treedt van het vernietigde deel van het besluit. Dan is [oordeel] = 8. Ga naar stap 11.
+9. Als het beroep gedeeltelijk gegrond wordt verklaard en de bestuursrechter draagt het bestuursorgaan op om een nieuw besluit te nemen, dan is [oordeel] = 9. Ga naar stap 11.
+10. In alle andere gevallen is [oordeel] = 10. Ga naar stap 11.
 11. Geef als output de waarde van [oordeel].
 
 ### Voorbeelden
@@ -139,7 +139,7 @@ VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan St
 **Output:** 8
 
 ### Belangrijk
-- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 11.
+- Geef het antwoord uitsluitend in de vorm van een enkel cijfer van 1 tot en met 10.
 - Geef geen toelichting bij het antwoord.
 - Herhaal de tekst niet in je antwoord.
 """
