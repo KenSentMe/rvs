@@ -109,18 +109,18 @@ en bepaalt wat van toepassing is en slaat het antwoord op in de variabele [oorde
 
 "{text}"
 
-2. Als het beroep niet ontvankelijk wordt verklaard van __alle__ appellanten, dan is [oordeel] = 1. Ga naar stap 11. 
-3. Als de bestuursrechter zich onbevoegd verklaart om uitspraak te doen, dan is [oordeel] = 2. Ga naar stap 11.
-4. Als de bestuursrechter een voorlopige voorziening afwijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 11.
-5. Als de bestuursrechter een voorlopige voorziening toewijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 11.
-6. Als in de beslissing meerdere uitspraken worden gedaan over dezelfde situatie en de situaties zijn met elkaar in tegenspraak, bijvoorbeeld eerst gegrond en daarna/op een later tijdstip ongegrond, dan is [oordeel] = 4. Ga naar stap 11. 
-7. Als het beroep geheel ongegrond wordt verklaard en/of de aangevallen uitspraak wordt geheel bevestigd en/of er wordt bepaald dat de rechtsgevolgen geheel in stand blijven en/of draagt op de geconstateerde gebreken te herstellen door een ander besluit te nemen, dan is [oordeel] = 5. Ga naar stap 11.
-8. Als het beroep geheel gegrond wordt verklaard, maar de rechtsgevolgen blijven in stand, dan is [oordeel] = 6. Ga naar stap 11.
-7. Als het beroep __geheel__ gegrond wordt verklaard, dan is [oordeel] = 7. Ga naar stap 11.
-8. Als het beroep gedeeltelijk gegrond wordt verklaard en het bestreden besluit wordt gedeeltelijk vernietigd en er wordt bepaald dat deze uitspraak in zoverre in de plaats treedt van het vernietigde deel van het besluit. Dan is [oordeel] = 8. Ga naar stap 11.
-9. Als het beroep gedeeltelijk gegrond wordt verklaard en de bestuursrechter draagt het bestuursorgaan op om een nieuw besluit te nemen, dan is [oordeel] = 9. Ga naar stap 11.
-10. In alle andere gevallen is [oordeel] = 10. Ga naar stap 11.
-11. Geef als output de waarde van [oordeel].
+2. Als het beroep niet ontvankelijk wordt verklaard van __alle__ appellanten, dan is [oordeel] = 1. Ga naar stap 13. 
+3. Als de bestuursrechter zich onbevoegd verklaart om uitspraak te doen, dan is [oordeel] = 2. Ga naar stap 13.
+4. Als de bestuursrechter een voorlopige voorziening afwijst of toewijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 13.
+5. Soms worden in een beslissing meerdere uitspraken gedaan over hetzelfde plan. Dit is te herkennen aan bewoordingen als "gewijzigde vaststelling" of "herziene vaststelling". En vaak ook: "Vernietigt de onder ... genoemde besluiten". Daarna volgt dan het definitieve oordeel. Als dit het geval is, ga naar stap 6. Als dat niet het geval is, ga naar stap 8.
+6. Als de definitieve uitspraak van een herziene of gewijzigde vaststelling voor een van de appellanten of alle appellanten __gegrond__ is, dan is [oordeel] = 4. Ga naar stap 13.
+7. Als de definitieve uitspraak van een herziene of gewijzigde vaststelling voor een van de appellanten of alle appellanten __ongegrond__ is dan is [oordeel] = 5. Ga naar stap 13. 
+8. Als het beroep __voor alle appellanten__ geheel ongegrond wordt verklaard en/of de aangevallen uitspraak wordt geheel bevestigd en/of er wordt bepaald dat de rechtsgevolgen geheel in stand blijven en/of draagt op de geconstateerde gebreken te herstellen door een ander besluit te nemen, dan is [oordeel] = 6. Ga naar stap 13.
+9. Als het beroep __voor alle appellanten__ geheel gegrond wordt verklaard, maar de rechtsgevolgen blijven in stand, dan is [oordeel] = 7. Ga naar stap 13.
+10. Als het beroep __voor alle appellanten__ __geheel__ gegrond wordt verklaard, dan is [oordeel] = 8. Ga naar stap 13.
+11. Als het beroep gedeeltelijk gegrond wordt verklaard al dan niet voor een deel van de appellanten en het bestreden besluit wordt gedeeltelijk vernietigd (te herkennen aan bewoordingen als In dit geval komen de woorden “vernietigt het besluit van …….voor zover het betreft, wat betreft” of “bepaalt dat artikel …….. komt te luiden” of “bepaalt dat deze uitspraak in de plaats treedt van het besluit voor wat betreft het vernietigde deel ” of “de rechtsgevolgen van het vernietigde gedeelte van het besluit blijven geheel in stand “ of “bepaalt dat deze uitspraak in de plaats treedt van het besluit voor wat betreft het vernietigde deel ” of “met inachtneming van wat in deze uitspraak is overwogen” of “de gebreken in het besluit van … datum … te herstellen of in plaats daarvan een gewijzigd besluit te nemen”). Dan is [oordeel] = 9. Ga naar stap 13.
+12. In alle andere gevallen is [oordeel] = 10. Ga naar stap 13.
+13. Geef als output de waarde van [oordeel].
 
 ### Voorbeelden
 
