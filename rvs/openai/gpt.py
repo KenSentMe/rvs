@@ -113,8 +113,8 @@ en bepaalt wat van toepassing is en slaat het antwoord op in de variabele [oorde
 3. Als de bestuursrechter zich onbevoegd verklaart om uitspraak te doen, dan is [oordeel] = 2. Ga naar stap 13.
 4. Als de bestuursrechter een voorlopige voorziening afwijst of toewijst en er wordt geen definitieve uitspraak gedaan, dan is [oordeel] = 3. Ga naar stap 13.
 5. Soms worden in een beslissing meerdere uitspraken gedaan over hetzelfde plan. Dit is te herkennen aan bewoordingen als "gewijzigde vaststelling" of "herziene vaststelling". En vaak ook: "Vernietigt de onder ... genoemde besluiten". Daarna volgt dan het definitieve oordeel. Als dit het geval is, ga naar stap 6. Als dat niet het geval is, ga naar stap 8.
-6. Als de definitieve uitspraak van een herziene of gewijzigde vaststelling voor een van de appellanten of alle appellanten __gegrond__ is, dan is [oordeel] = 4. Ga naar stap 13.
-7. Als de definitieve uitspraak van een herziene of gewijzigde vaststelling voor een van de appellanten of alle appellanten __ongegrond__ is dan is [oordeel] = 5. Ga naar stap 13. 
+6. __let op__: Kijk hier naar het oordeel met de meest recente datum en negeer wat wordt gezegd over oudere uitspraken. Als de definitieve uitspraak van een herziene of gewijzigde vaststelling (bijvoorbeeld verwoord via "op onderdelen gewijzigd is vastgesteld") voor een van de appellanten of alle appellanten __gegrond__ is, dan is [oordeel] = 4. Ga naar stap 13.
+7. __let op__: Kijk hier naar het oordeel met de meest recente datum en negeer wat wordt gezegd over oudere uitspraken. Als de definitieve uitspraak van een herziene of gewijzigde vaststelling (bijvoorbeeld verwoord via "op onderdelen gewijzigd is vastgesteld") voor een van de appellanten of alle appellanten __ongegrond__ is, dan is [oordeel] = 5. Ga naar stap 13. 
 8. Als het beroep __voor alle appellanten__ geheel ongegrond wordt verklaard en/of de aangevallen uitspraak wordt geheel bevestigd en/of er wordt bepaald dat de rechtsgevolgen geheel in stand blijven en/of draagt op de geconstateerde gebreken te herstellen door een ander besluit te nemen, dan is [oordeel] = 6. Ga naar stap 13.
 9. Als het beroep __voor alle appellanten__ geheel gegrond wordt verklaard, maar de rechtsgevolgen blijven in stand, dan is [oordeel] = 7. Ga naar stap 13.
 10. Als het beroep __voor alle appellanten__ __geheel__ gegrond wordt verklaard, dan is [oordeel] = 8. Ga naar stap 13.
@@ -145,6 +145,7 @@ VII. gelast dat het college van burgemeester en wethouders van Oegstgeest aan St
 """
 
     try:
+        print(prompt)
         answer = send_prompt(prompt)
     except OpenAIError:
         return None
