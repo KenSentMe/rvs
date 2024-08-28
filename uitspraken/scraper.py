@@ -3,6 +3,11 @@ import re
 from bs4 import BeautifulSoup
 from datetime import datetime
 import locale
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from .models import Uitspraak, Trefwoord
 
@@ -21,9 +26,15 @@ def entry_already_exists(titel):
     return Uitspraak.objects.filter(titel=titel).exists()
 
 
-def get_full_data(url, headers):
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.content, "html.parser")
+def get_full_data(soup):
+
+    titel = soup.find("h1", class_="grid-title").get_text().split("Uitspraak ")[1].strip()
+    if len(titel) > 90:
+        titel = titel[:90]
+    print("Found entry " + titel)
+    if entry_already_exists(titel):
+        print("Duplicate found: " + titel)
+        return
 
     ecli = soup.find("div", class_="rol-metadata-blok").find(string=re.compile("ECLI:")).get_text(strip=True)
     datum = soup.find(string=re.compile("Datum uitspraak")).find_next('dd').contents[0].get_text(strip=True)
@@ -33,81 +44,82 @@ def get_full_data(url, headers):
     trefwoorden_element = soup.find("ul", class_="trefwoorden").find_all("li")
     trefwoorden = []
     for trefwoord in trefwoorden_element:
-        title = trefwoord.attrs["title"]
-        if title.startswith("Proceduresoort "):
-            trefwoorden.append(("proceduresoort", title.split("Proceduresoort ")[1]))
-        elif title.startswith("Rechtsgebied "):
-            trefwoorden.append(("rechtsgebied", title.split("Rechtsgebied ")[1]))
+        tw_title = trefwoord.attrs["title"]
+        if tw_title.startswith("Proceduresoort "):
+            trefwoorden.append(("proceduresoort", tw_title.split("Proceduresoort ")[1]))
+        elif tw_title.startswith("Rechtsgebied "):
+            trefwoorden.append(("rechtsgebied", tw_title.split("Rechtsgebied ")[1]))
 
     inhoud = soup.find("div", id="volledigetekst").find("div", class_="iprox-rich-content").get_text()
 
-    return ecli, datum_parsed, samenvatting, trefwoorden, inhoud
+    return titel, ecli, datum_parsed, samenvatting, trefwoorden, inhoud
 
 
-def scrape_and_populate_database(rows, years, facet):
-    headers = {
-        'Accept-Encoding': 'gzip, deflate, sdch',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 '
-                      'Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'Cache-Control': 'max-age=0',
-        'Connection': 'keep-alive',
-    }
+def scrape_and_populate_database():
 
-    for year in years:
+    url = f"https://www.raadvanstate.nl/uitspraken/?zoeken=true&zoeken_term=&pager_rows=&kalenderjaar=&actualiteit=&Zoe_Selected_facet%3AType%20uitspraak=111&Zoe_Selected_facet%3AProceduresoort=78&Zoe_Selected_facet%3AProceduresoort=75&Zoe_Selected_facet%3AProceduresoort=47&Zoe_Selected_facet%3AProceduresoort=142&Zoe_Selected_facet%3AProceduresoort=141&Zoe_Selected_facet%3AProceduresoort=51&Zoe_Selected_facet%3ARechtsgebied=73&Zoe_Selected_facet%3ARechtsgebied=82&Zoe_Selected_facet%3ARechtsgebied=102&Zoe_Selected_facet%3ARechtsgebied=85&Zoe_Selected_facet%3ARechtsgebied=101&Zoe_Selected_facet%3ARechtsgebied=57&Zoe_Selected_facet%3ARechtsgebied=58&Zoe_Selected_facet%3ARechtsgebied=59&Zoe_Selected_facet%3ARechtsgebied=60&Zoe_Selected_facet%3ARechtsgebied=61&Zoe_Selected_facet%3ARechtsgebied=38&Zoe_Selected_facet%3ARechtsgebied=63&Zoe_Selected_facet%3ARechtsgebied=56&Zoe_Selected_facet%3ARechtsgebied=65&Zoe_Selected_facet%3ARechtsgebied=66&Zoe_Selected_facet%3ARechtsgebied=67&Zoe_Selected_facet%3ARechtsgebied=68&Zoe_Selected_facet%3ARechtsgebied=69&Zoe_Selected_facet%3ARechtsgebied=70&Zoe_Selected_facet%3ARechtsgebied=104&Zoe_Selected_facet%3ARechtsgebied=121"
 
-        url = f"https://www.raadvanstate.nl/uitspraken/?zoeken=true&zoeken_term=&pager_rows={rows}&actualiteit=kalenderjaar&kalenderjaar={year}&Zoe_Selected_facet%3ARechtsgebied={facet}"
+    print("Scraping url " + url)
 
-        print("Scraping url " + url)
+    driver = webdriver.Firefox()
+    driver.get(url)
 
-        response = requests.get(url, headers=headers)
-        soup = BeautifulSoup(response.content, "html.parser")
+    entry = driver.find_element(By.CSS_SELECTOR, "div.rol-entry")
+    entry.click()
 
-        # Extract the data using BeautifulSoup and populate the database
-        # Use the Uitspraak model to create instances and save them to the database
+    while True:
+        try:
+            next_button = WebDriverWait(driver, 3).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "div.goto-next-result a"))
+            )
+        except TimeoutException:
+            print("Driver timeout")
+            driver.quit()
+            return
 
-        for element in soup.select("div.rol-entry"):
-            link = element.select_one("div.grid-title a.siteLink")["href"]
-            titel = element.select_one("div.grid-title a.siteLink").get_text(strip=True)
-            if len(titel) > 90:
-                titel = titel[:90]
-            print("Found entry " + titel)
+        link = driver.current_url
 
-            if not entry_already_exists(titel):
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        try:
+            titel, ecli, datum, samenvatting, trefwoorden, inhoud = get_full_data(soup)
+        except:  # noqa
+            print("Skipping")
+            next_button.click()
+            continue
 
-                print(titel + " not scraped yet. Start scraping")
+        if datum >= datetime(2024, 7,1):
+            print("Too recent")
+            next_button.click()
+            continue
 
-                try:
-                    ecli, datum, samenvatting, trefwoorden, inhoud = get_full_data(link, headers)
-                except: # noqa
-                    print("Skipping " + titel)
-                    continue
+        if datum < datetime(2004, 7,1):
+            print("Too old")
+            driver.quit()
+            break
 
-                trefwoorden_data = []
+        trefwoorden_data = []
 
-                for trefwoord in trefwoorden:
-                    trefwoord_data, _ = Trefwoord.objects.get_or_create(
-                        naam=trefwoord[1],
-                        type=trefwoord[0]
-                    )
-                    trefwoorden_data.append(trefwoord_data)
+        for trefwoord in trefwoorden:
+            trefwoord_data, _ = Trefwoord.objects.get_or_create(
+                naam=trefwoord[1],
+                type=trefwoord[0]
+            )
+            trefwoorden_data.append(trefwoord_data)
 
-                uitspraak = Uitspraak(
-                    titel=titel,
-                    ecli=ecli,
-                    samenvatting=samenvatting,
-                    datum=datum,
-                    link=link,
-                    inhoud=inhoud,
-                )
+        uitspraak = Uitspraak(
+            titel=titel,
+            ecli=ecli,
+            samenvatting=samenvatting,
+            datum=datum,
+            link=link,
+            inhoud=inhoud,
+        )
 
-                uitspraak.save()
+        uitspraak.save()
 
-                uitspraak.trefwoorden.set(trefwoorden_data)
+        uitspraak.trefwoorden.set(trefwoorden_data)
 
-                uitspraak.save()
-            else:
-                print("Duplicate found: " + titel)
+        uitspraak.save()
 
+        print("Saved " + titel)
+        next_button.click()
