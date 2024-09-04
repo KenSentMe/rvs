@@ -158,7 +158,6 @@ tegen het besluit van 21 september 2021 van de raad van de gemeente Wassenaar on
 """
 
     try:
-        print(prompt)
         answer = send_prompt(prompt)
     except OpenAIError:
         return None

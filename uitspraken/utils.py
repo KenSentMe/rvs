@@ -1,5 +1,6 @@
 from rvs.openai.gpt import get_place, get_metadata, get_clear_verdict, get_verdict, get_letter_labels, get_appellant_type_labels
 from uitspraken.models import Letter, AppellantType
+import re
 
 
 def add_oordeel(uitspraak):
@@ -85,6 +86,16 @@ def get_beslissing(uitspraak):
         pass
 
     try:
+        beslissing = re.split(r'(?<=\.Beslissing)(?=\S)', uitspraak.inhoud)[1].split(".Aldus vastgesteld door")[0]
+    except IndexError:
+        pass
+
+    try:
+        beslissing = uitspraak.inhoud.split("\nDe Afdeling bestuursrechtspraak van de Raad van State\n")[1].split("\nAldus vastgesteld door")[0]
+    except IndexError:
+        pass
+
+    try:
         beslissing = uitspraak.inhoud.split(
             "\nDe voorzieningenrechter:\n")[1].split(
             "\nAldus vastgesteld door")[0]
@@ -117,7 +128,8 @@ def get_final_verdict(uitspraak):
             uitspraak.oordeel = oordeel
             uitspraak.save()
             return 1
-
+    else:
+        print(f"Already has verdict for {uitspraak.id}")
     return 0
 
 
