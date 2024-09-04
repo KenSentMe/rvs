@@ -21,9 +21,7 @@ class UitspraakAdminForm(forms.ModelForm):
 @admin.register(Uitspraak)
 class UitsprakenAdmin(admin.ModelAdmin):
     list_display = ("uitspraak_link",)
-    # fields = '__ALL__'
-    # form = UitspraakAdminForm
-    # change_form_template = 'admin/uitspraak_change_form.html'
+    list_filter = ("trefwoorden",)
 
     def uitspraak_link(self, obj):
         change_url = reverse('admin:uitspraken_uitspraak_change', args=[obj.id])
