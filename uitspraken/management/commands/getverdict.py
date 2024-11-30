@@ -11,6 +11,8 @@ class Command(BaseCommand):
         uitspraken = (Uitspraak.objects
                       .filter(beslissing__isnull=False)
                       .filter(oordeel__isnull=True) | Uitspraak.objects.filter(beslissing__isnull=False).filter(oordeel=0))
+        print("Get final verdict in Uitspraken")
+        print(f"Found {uitspraken.count()} uitspraken")
         for uitspraak in uitspraken:
             counter += get_final_verdict(uitspraak)
 
