@@ -124,6 +124,7 @@ def get_final_verdict(uitspraak):
     if uitspraak.beslissing and (not uitspraak.oordeel or uitspraak.oordeel == 0):
         print(f"Getting final verdict for {uitspraak.id}")
         oordeel = get_verdict(uitspraak.beslissing[:10000])
+        print(f"GOT {oordeel} for {uitspraak.id}")
         if oordeel:
             uitspraak.oordeel = oordeel
             uitspraak.save()
