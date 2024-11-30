@@ -8,7 +8,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         counter = 0
-        uitspraken = Uitspraak.objects.all()
+        uitspraken = (Uitspraak.objects
+                      .filter(beslissing__isnull=False)
+                      .filter(oordeel__isnull=True) | Uitspraak.objects.filter(beslissing__isnull=False).filter(oordeel=0))
         for uitspraak in uitspraken:
             counter += get_final_verdict(uitspraak)
 
