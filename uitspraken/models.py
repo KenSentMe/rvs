@@ -138,9 +138,9 @@ sample_ids = [287,
 
 class UitspraakManager(models.Manager):
     def get_queryset(self):
-        # return super().get_queryset()
+        return super().get_queryset()
         # return super().get_queryset().exclude(id__in=ids_list + new_ids)
-        return super().get_queryset().filter(id__in=sample_ids)
+        # return super().get_queryset().filter(id__in=sample_ids)
 
     def get_trefwoorden(self):
         return Trefwoord.objects.filter(uitspraak__in=self.get_queryset()).distinct()
