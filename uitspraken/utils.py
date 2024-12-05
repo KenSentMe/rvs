@@ -26,7 +26,8 @@ def add_place(uitspraak):
 def add_metadata(uitspraak):
     if uitspraak.inhoud and not uitspraak.appellant:
         metadata = get_metadata(uitspraak.inhoud[:1000])
-        if len(metadata) == 4:
+        if metadata and len(metadata) == 4:
+            print(f"found metadata for {uitspraak.id}")
             uitspraak.appellant = metadata[0]
             uitspraak.counterpart = metadata[1]
             uitspraak.plaats = metadata[2]
@@ -121,6 +122,7 @@ def get_first_verdict(uitspraak):
 
 
 def get_final_verdict(uitspraak):
+    print(f"Checking {uitspraak.id}")
     if uitspraak.beslissing and (not uitspraak.oordeel or uitspraak.oordeel == 0):
         print(f"Getting final verdict for {uitspraak.id}")
         oordeel = get_verdict(uitspraak.beslissing[:10000])
