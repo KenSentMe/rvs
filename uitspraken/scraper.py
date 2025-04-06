@@ -57,33 +57,65 @@ def get_full_data(soup):
 
 def scrape_and_populate_database():
 
-    url = f"https://www.raadvanstate.nl/uitspraken/?zoeken=true&zoeken_term=&pager_rows=&kalenderjaar=&actualiteit=&Zoe_Selected_facet%3AType%20uitspraak=111&Zoe_Selected_facet%3AProceduresoort=78&Zoe_Selected_facet%3AProceduresoort=75&Zoe_Selected_facet%3AProceduresoort=47&Zoe_Selected_facet%3AProceduresoort=142&Zoe_Selected_facet%3AProceduresoort=141&Zoe_Selected_facet%3AProceduresoort=51&Zoe_Selected_facet%3ARechtsgebied=73&Zoe_Selected_facet%3ARechtsgebied=82&Zoe_Selected_facet%3ARechtsgebied=102&Zoe_Selected_facet%3ARechtsgebied=85&Zoe_Selected_facet%3ARechtsgebied=101&Zoe_Selected_facet%3ARechtsgebied=57&Zoe_Selected_facet%3ARechtsgebied=58&Zoe_Selected_facet%3ARechtsgebied=59&Zoe_Selected_facet%3ARechtsgebied=60&Zoe_Selected_facet%3ARechtsgebied=61&Zoe_Selected_facet%3ARechtsgebied=38&Zoe_Selected_facet%3ARechtsgebied=63&Zoe_Selected_facet%3ARechtsgebied=56&Zoe_Selected_facet%3ARechtsgebied=65&Zoe_Selected_facet%3ARechtsgebied=66&Zoe_Selected_facet%3ARechtsgebied=67&Zoe_Selected_facet%3ARechtsgebied=68&Zoe_Selected_facet%3ARechtsgebied=69&Zoe_Selected_facet%3ARechtsgebied=70&Zoe_Selected_facet%3ARechtsgebied=104&Zoe_Selected_facet%3ARechtsgebied=121"
+    url = f"https://www.raadvanstate.nl/uitspraken/?zoeken=true&pager_page=70&Zoe_Selected_facet%3aProceduresoort=78%2c75%2c31%2c47%2c53&kalenderjaar=2025&Zoe_Selected_facet%3aRechtsgebied=80%2c87%2c57%2c58%2c59%2c60%2c61%2c38%2c63%2c56%2c65%2c66%2c67%2c68%2c69%2c70%2c97%2c149%2c113%2c124%2c104%2c114%2c88%2c81%2c137%2c77%2c121%2c132%2c99%2c91%2c71%2c120%2c98%2c95%2c119&Zoe_Selected_facet%3aType+uitspraak=111%2c109&pager_rows=100"
 
     print("Scraping url " + url)
 
     driver = webdriver.Firefox()
     driver.get(url)
 
-    entry = driver.find_element(By.CSS_SELECTOR, "div.rol-entry")
-    entry.click()
+    # Handle cookie bar
+    try:
+        cookie_button = WebDriverWait(driver, 3).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".cookies_buttons input.btn_allow_true"))
+        )
+        cookie_button.click()
+    except TimeoutException:
+        print("No cookie bar found or couldn't click it")
+
+    # Try entries until finding a clickable one
+    entries = driver.find_elements(By.CSS_SELECTOR, "div.rol-entry.linking")
+    entry_clicked = False
+    for entry in entries:
+        try:
+            entry.click()
+            entry_clicked = True
+            break
+        except:
+            continue
+    
+    if not entry_clicked:
+        print("No clickable entries found")
+        driver.quit()
+        return
 
     while True:
-        try:
-            next_button = WebDriverWait(driver, 3).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "div.goto-next-result a"))
-            )
-        except TimeoutException:
-            print("Driver timeout")
-            driver.quit()
-            return
+        max_retries = 3
+        retry_count = 0
+        while retry_count < max_retries:
+            try:
+                next_button = WebDriverWait(driver, 3).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "div.goto-next-result a"))
+                )
+                break
+            except TimeoutException:
+                retry_count += 1
+                if retry_count == max_retries:
+                    print("Max retries reached, driver timeout")
+                    driver.quit()
+                    return
+                print(f"Timeout, retrying ({retry_count}/{max_retries})")
+                driver.refresh()  # Refresh the page before retrying
+                continue
 
         link = driver.current_url
 
         soup = BeautifulSoup(driver.page_source, "html.parser")
         try:
             titel, ecli, datum, samenvatting, trefwoorden, inhoud = get_full_data(soup)
-        except:  # noqa
+        except Exception as e:  # noqa
             print("Skipping")
+            print(e)
             next_button.click()
             continue
 
