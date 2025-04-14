@@ -34,6 +34,10 @@ class IndexView(generic.ListView):
         letters = self.request.GET.getlist('letter')
         if letters:
             queryset = queryset.filter(letters__letter__in=letters)
+        appellant_types = self.request.GET.getlist('appellant_type')
+        if appellant_types:
+            print(appellant_types)
+            queryset = queryset.filter(appellant_type__in=appellant_types)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -59,6 +63,7 @@ class IndexView(generic.ListView):
         context['all_letters'] = letters
         context['selected_letters'] = self.request.GET.getlist('letter')
         context['all_appellant_types'] = appellant_types
+        context['selected_appellant_types'] = self.request.GET.getlist('appellant_type')
 
         return context
 

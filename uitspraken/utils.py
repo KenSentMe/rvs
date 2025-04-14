@@ -1,4 +1,4 @@
-from rvs.openai.gpt import get_place, get_metadata, get_clear_verdict, get_verdict, get_letter_labels, get_appellant_type_labels
+from rvs.openai.gpt import get_place, get_metadata, get_clear_verdict, get_verdict, get_letter_labels, get_appellant_type_label, get_plaats_label
 from uitspraken.models import Letter, AppellantType
 import re
 
@@ -123,7 +123,15 @@ def get_first_verdict(uitspraak):
 
 def get_final_verdict(uitspraak):
     print(f"Checking {uitspraak.id}")
-    if uitspraak.beslissing and (not uitspraak.oordeel or uitspraak.oordeel == 0):
+
+    beslissing = ""
+
+    if uitspraak.beslissing:
+        beslissing = uitspraak.beslissing
+    else:
+        beslissing = uitspraak.inhoud
+
+    if beslissing and (not uitspraak.oordeel or uitspraak.oordeel == 0):
         print(f"Getting final verdict for {uitspraak.id}")
         oordeel = get_verdict(uitspraak.beslissing[:10000])
         print(f"GOT {oordeel} for {uitspraak.id}")
@@ -152,13 +160,23 @@ def get_letter(uitspraak):
 
 
 def get_appellant_type(uitspraak):
-    if uitspraak.beslissing and not uitspraak.appellant_types.all():
-        available_types = AppellantType.objects.all()
+    uitspraak.beslissing and (uitspraak.appellant_type is None or uitspraak.appellant_type == "UNK")
+    available_types = AppellantType.objects.all()
 
-        appellant_types = get_appellant_type_labels(uitspraak.samenvatting[:1000], available_types)
-        if appellant_types:
-            for t in appellant_types:
-                uitspraak.appellant_types.add(AppellantType.objects.get(type=t))
+    appellant_type = get_appellant_type_label(uitspraak.inhoud[:1000])
+
+    if appellant_type:
+        uitspraak.appellant_type = appellant_type
+        uitspraak.save()
+        return 1
+    return 0
+
+
+def get_plaats(uitspraak):
+    if uitspraak.beslissing and not uitspraak.plaats:
+        plaats = get_plaats_label(uitspraak.inhoud[:1000])
+        if plaats:
+            uitspraak.plaats = plaats
             uitspraak.save()
             return 1
     return 0

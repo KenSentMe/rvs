@@ -158,6 +158,25 @@
                             </div>
                         {% endfor %}
                     </div>
+                    <div class="form-group">
+                        <label>Filter by Appellant Type:</label><br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="appellant-type-bur" name="appellant_type" value="BUR" {% if "BUR" in selected_appellant_types %}checked{% endif %}>
+                            <label class="form-check-label" for="appellant-type-bur">Burger</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="appellant-type-bes" name="appellant_type" value="BES" {% if "BES" in selected_appellant_types %}checked{% endif %}>
+                            <label class="form-check-label" for="appellant-type-bes">Bestuursorgaan</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="appellant-type-mix" name="appellant_type" value="MIX" {% if "MIX" in selected_appellant_types %}checked{% endif %}>
+                            <label class="form-check-label" for="appellant-type-mix">Mengsel</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="appellant-type-unk" name="appellant_type" value="UNK" {% if "UNK" in selected_appellant_types %}checked{% endif %}>
+                            <label class="form-check-label" for="appellant-type-unk">Onbekend</label>
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary">Filter</button>
                     <a href="{% url 'uitspraken:index' %}" class="btn btn-secondary">Clear Filter</a>
                 </form>

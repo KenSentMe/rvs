@@ -283,3 +283,64 @@ def get_appellant_type_labels(text, types):
             collected_types.append(t)
 
     return collected_types
+
+
+def get_appellant_type_label(text):
+    prompt = f"""
+    ### Instructie        
+    Je bent een expert in het lezen van juridische uitspraken. Lees de tekst van de Raad van State:
+    
+    "{text}"
+    
+    Je gaat bepalen om welk type appellant het gaat in de beslissing van de Raad van State. Dus, wie zijn de appellenten voor deze uitspraak. 
+    Maak dan de keuze voor het type van de appellant [label].
+
+    1. Als de appellant een burger, bedrijf, vereniging, etc. is, dan is [label] = "BUR"
+    2. Als de appellant een bestuursorgaan is, dan is [label] = "BES"
+    3. Als de appellant een mengsel is van burger, bestuursorgaan, etc., dan is [label] = "MIX"
+    4. Anders is [label] = "UNK"
+    
+    ### Output
+    Geef als antwoord uitsluitend een van de volgende waardes: "BUR", "BES", "MIX", "UNK"
+    
+    ### Belangrijk
+    - Geef als antwoord uitsluitend een van de volgende waardes: "BUR", "BES", "MIX", "UNK"
+    - Geef geen toelichting bij het antwoord.
+    - Herhaal de tekst niet in je antwoord.
+        """
+
+    answer = send_prompt(prompt)
+
+    if answer:
+        print("Appellant type: ", answer)
+        return answer.strip()
+
+    return None
+
+
+def get_plaats_label(text):
+    prompt = f"""
+    ### Instructie        
+    Je bent een expert in het lezen van juridische uitspraken. Lees de volgende uitspraak van de Raad van State:
+    
+    "{text}"
+    
+    Geef de gemeente waar de zaak uit de uitspraak van de Raad van State betrekking op heeft. Als het een landelijke uitspraak is, geef dan "Nederland" op. 
+    Als de gemeente niet is genoemd of onduidelijk is, geef dan "onbekend" op.
+    
+    ### Output
+    Geef als antwoord uitsluitend de gemeente.
+    
+    ### Belangrijk
+    - Geef als antwoord uitsluitend de gemeente.
+    - Geef geen toelichting bij het antwoord.
+    - Herhaal de tekst niet in je antwoord.
+    """
+
+    answer = send_prompt(prompt)
+
+    if answer:
+        print("Plaats: ", answer)
+        return answer.strip()
+
+    return None
