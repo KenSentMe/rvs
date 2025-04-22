@@ -170,6 +170,13 @@ class Uitspraak(models.Model):
         ("UNK", "Weet niet")
     ]
 
+    appellant_type_choices = [
+        ("BUR", "Burger"),
+        ("BES", "Bestuursorgaan"),
+        ("MIX", "Mengsel"),
+        ("UNK", "Weet niet")
+    ]
+
     titel = models.CharField(max_length=100)
     ecli = models.CharField(max_length=24)
     samenvatting = models.TextField()
@@ -187,6 +194,7 @@ class Uitspraak(models.Model):
     appellant_types = models.ManyToManyField(AppellantType)
     counterpart = models.CharField(max_length=250, default="")
     letters = models.ManyToManyField(Letter)
+    appellant_type = models.CharField(max_length=3, choices=appellant_type_choices, null=True, blank=True)
 
     objects = UitspraakManager()
 

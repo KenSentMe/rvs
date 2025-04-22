@@ -24,6 +24,9 @@
             <span class="badge badge-success">{{ uitspraak.plaats }}</span>
             <span class="badge badge-warning">{{ uitspraak.provincie }}</span>
         </h3>
+        <h3>
+            <span class="badge badge-danger">{{ uitspraak.get_appellant_type_display }}</span>
+        </h3>
     </div>
     <div class="col-md-6 text-right">
         <div class="dropdown">
@@ -34,9 +37,9 @@
             </select>
         </div>
     </div>
-    <p><strong>{{ uitspraak.appellant }}</strong>{% if uitspraak.appellant_types %}{% for type in uitspraak.appellant_types.all %}<span class="badge badge-danger">{{ type }}</span>{% endfor %}{% endif %}<br/>
+    <!-- <p><strong>{{ uitspraak.appellant }}</strong>{% if uitspraak.appellant_types %}{% for type in uitspraak.appellant_types.all %}<span class="badge badge-danger">{{ type }}</span>{% endfor %}{% endif %}<br/>
         vs<br/>
-        <strong>{{ uitspraak.counterpart }}</strong></p>
+        <strong>{{ uitspraak.counterpart }}</strong></p> -->
 </div>
 <div class="alert alert-dark">
     <h3>Beslissing</h3>
