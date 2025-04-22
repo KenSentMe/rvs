@@ -36,7 +36,6 @@ class IndexView(generic.ListView):
             queryset = queryset.filter(letters__letter__in=letters)
         appellant_types = self.request.GET.getlist('appellant_type')
         if appellant_types:
-            print(appellant_types)
             queryset = queryset.filter(appellant_type__in=appellant_types)
         return queryset
 
@@ -90,6 +89,11 @@ class UitspraakView(generic.DetailView):
         letters = self.request.GET.getlist('letter')
         if letters and letters != ['']:
             queryset = queryset.filter(letters__letter__in=letters)
+
+        appellant_type = self.request.GET.get('appellant_type')
+        if appellant_type and appellant_type != ['']:
+            queryset = queryset.filter(appellant_type=appellant_type)
+
         return queryset
 
     def get_context_data(self, **kwargs):

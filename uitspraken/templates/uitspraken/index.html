@@ -14,7 +14,7 @@
             </thead>
             <tbody>
                 {% for uitspraak in uitspraken %}
-                <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}" data-oordeel="{{ selected_oordelen|join:',' }}" data-label="{{ selected_labels|join:',' }}" data-letter="{{ selected_letters|join:',' }}">
+                <tr class="table-row" data-href="{% url 'uitspraken:uitspraak' uitspraak.id %}" data-oordeel="{{ selected_oordelen|join:',' }}" data-label="{{ selected_labels|join:',' }}" data-letter="{{ selected_letters|join:',' }}" data-appellant-type="{{ uitspraak.appellant_type }}">
                     <td>
                         <p>{{ uitspraak.titel }}</p>
                         <p>{{ uitspraak.datum }}</p>
@@ -26,11 +26,17 @@
                                     <span class="badge badge-info">{{ trefwoord.naam }}</span>
                                 {% endif %}
                             {% endfor %}
+                        </p>
+                        <p>
                             <span class="badge badge-success">{{ uitspraak.plaats }}</span>
                             <span class="badge badge-warning">{{ uitspraak.provincie }}</span>
                         </p>
-                        <h3>
+                        <p>
                             <span class="badge badge-dark">{{ uitspraak.get_label_display }}</span>
+                        </p>
+                        <h3>
+                            <span class="badge badge-danger">{{ uitspraak.get_appellant_type_display }}</span>
+                            
                             <span class="badge badge-secondary">{{ uitspraak.oordeel }}</span>
                         </h3>
                         <h3>
@@ -200,7 +206,6 @@ document.addEventListener("DOMContentLoaded", function() {
            this.style.backgroundColor = "";
        });
        row.addEventListener("click", function() {
-           console.log(this.dataset)
            let url = this.dataset.href;
            let oordelen = this.dataset.oordeel.split(',');
            let oordeel_url = "";
@@ -217,8 +222,9 @@ document.addEventListener("DOMContentLoaded", function() {
            if (letters.length > 0) {
                letter_url = letters.map(l => `letter=${l}`).join('&');
            }
+           let appellant_type = this.dataset.appellantType;
            if (url) {
-               window.location.href = `${url}?${oordeel_url}&${label_url}&${letter_url}`;
+               window.location.href = `${url}?${oordeel_url}&${label_url}&${letter_url}&appellant_type=${appellant_type}`;
            }
        });
    });
